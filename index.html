@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dashboard">
+  <title>Tal's Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f13;
+      --card: #1a1a22;
+      --card2: #22222e;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --green: #4caf78;
+      --yellow: #f4b942;
+      --red: #e05c5c;
+      --text: #f0f0f5;
+      --muted: #8888aa;
+      --border: #2e2e3e;
+      --radius: 14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 20px 16px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-top { display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { font-size: 20px; font-weight: 700; }
+    .header h1 span { color: var(--accent); }
+    .date-pill {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .last-updated {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 12px 16px 0;
+      background: var(--bg);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      position: sticky;
+      top: 73px;
+      z-index: 99;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Content */
+    .content { padding: 14px 14px; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    /* Execute Today */
+    .execute-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .execute-item {
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
+    }
+    .execute-item .ticker { font-size: 18px; font-weight: 700; }
+    .execute-item .price { font-size: 13px; color: var(--muted); margin: 2px 0; }
+    .execute-item .target { font-size: 11px; color: var(--muted); }
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .buy { background: rgba(76,175,120,0.2); color: var(--green); }
+    .wait { background: rgba(244,185,66,0.2); color: var(--yellow); }
+    .above { background: rgba(224,92,92,0.2); color: var(--red); }
+    .check { background: rgba(108,99,255,0.2); color: var(--accent); }
+
+    /* Cash bar */
+    .cash-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cash-row:last-child { border-bottom: none; }
+    .cash-label { color: var(--muted); font-size: 13px; }
+    .cash-value { font-weight: 700; font-size: 15px; }
+    .cash-value.big { font-size: 22px; color: var(--green); }
+
+    /* Portfolio */
+    .holding-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .holding-row:last-child { border-bottom: none; }
+    .holding-left { display: flex; flex-direction: column; gap: 2px; }
+    .holding-ticker { font-weight: 700; font-size: 15px; }
+    .holding-name { font-size: 12px; color: var(--muted); }
+    .holding-right { text-align: left; }
+    .holding-value { font-weight: 600; font-size: 14px; }
+    .holding-impact {
+      font-size: 11px;
+      margin-top: 2px;
+    }
+    .positive { color: var(--green); }
+    .negative { color: var(--red); }
+    .neutral { color: var(--muted); }
+
+    /* Tasks */
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .task-item:last-child { border-bottom: none; }
+    .task-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .task-item.done .task-checkbox {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
+    .task-text { font-size: 14px; line-height: 1.4; flex: 1; }
+    .task-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .priority-p1 { color: var(--red); font-weight: 600; }
+    .priority-p2 { color: var(--yellow); }
+
+    /* Summary */
+    .summary-box {
+      background: linear-gradient(135deg, var(--accent) 0%, #9c27b0 100%);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 10px;
+    }
+    .summary-box p { font-size: 14px; line-height: 1.6; opacity: 0.95; }
+
+    /* Action card */
+    .action-card {
+      background: var(--card2);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .action-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .action-ticker { font-size: 20px; font-weight: 800; }
+    .action-score {
+      background: var(--accent);
+      color: white;
+      border-radius: 8px;
+      padding: 3px 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .action-thesis { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+    .action-row { display: flex; justify-content: space-between; font-size: 13px; margin-top: 6px; }
+    .action-label { color: var(--muted); }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 8px 0 env(safe-area-inset-bottom, 8px);
+      z-index: 200;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 10px;
+      transition: color 0.2s;
+    }
+    .nav-item.active { color: var(--accent); }
+    .nav-icon { font-size: 20px; line-height: 1; }
+
+    /* Refresh button */
+    .refresh-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .refresh-btn:active { opacity: 0.8; }
+
+    /* Watchlist */
+    .watch-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .watch-item:last-child { border-bottom: none; }
+    .watch-ticker { font-weight: 700; font-size: 15px; }
+    .watch-note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .watch-alert { font-size: 12px; color: var(--yellow); }
+
+    .divider { height: 1px; background: var(--border); margin: 8px 0; }
+    .empty-state { text-align: center; color: var(--muted); padding: 30px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>Tal's <span>Dashboard</span></h1>
+    <div class="date-pill" id="date-display"></div>
+  </div>
+  <div class="last-updated" id="last-updated-display">טוען נתונים...</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showSection('invest')">📈 השקעות</div>
+  <div class="tab" onclick="showSection('tasks')">✅ משימות</div>
+  <div class="tab" onclick="showSection('amazon')">📦 אמזון</div>
+  <div class="tab" onclick="showSection('portfolio')">💼 תיק</div>
+</div>
+
+<div class="content">
+
+  <!-- INVESTMENTS -->
+  <div id="invest" class="section active">
+    <div id="execute-today-card" class="card">
+      <div class="card-title">⚡ Execute Today?</div>
+      <div class="execute-grid" id="execute-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div id="action-cards-container">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="card">
+      <div class="card-title">👁️ Watchlist</div>
+      <div id="watchlist-container">
+        <div class="empty-state">אין נתונים — ממתין לעדכון הבוקר</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💬 תקציר</div>
+      <div class="summary-box">
+        <p id="summary-text">הדשבורד יתעדכן אוטומטית כל בוקר עם נתונים טריים.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKS -->
+  <div id="tasks" class="section">
+    <div class="card">
+      <div class="card-title">🔴 P1 — דחוף היום</div>
+      <div id="tasks-p1">
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">העלה CPSIA flat file v3 ל-SC</div><div class="task-meta priority-p1">P1 · אמזון · Enforcement July 27</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">העלה Hero V2 flat file ל-SC</div><div class="task-meta priority-p1">P1 · אמזון · קובץ מוכן</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">בדוק תגובת Discount Bank להעברת TSLA</div><div class="task-meta priority-p1">P1 · השקעות · פניה 199930559, due 30/6</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">בדוק התראת אבטחה MSK MyChart</div><div class="task-meta priority-p1">P1 · אישי</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🟡 P2 — השבוע</div>
+      <div id="tasks-p2">
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">בנה Brand Store ב-SC</div><div class="task-meta priority-p2">P2 · אמזון · due June 30</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">הפעל PPC campaigns</div><div class="task-meta priority-p2">P2 · אמזון · due June 30</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">בנר Canva 970×600px לModule 1</div><div class="task-meta priority-p2">P2 · אמזון · due June 28</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">צלם gift pouch לModule 4</div><div class="task-meta priority-p2">P2 · אמזון · due June 28</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">שלח קופונים Prime Day ל-5 ASINs</div><div class="task-meta priority-p2">P2 · אמזון · due July 1</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">פגישה עם דור אליאב</div><div class="task-meta priority-p2">P2 · שני בבוקר June 29</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">בחינת NLP</div><div class="task-meta priority-p2">P2 · June 30</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">שלם חשבון אבן יהודה</div><div class="task-meta priority-p2">P2 · אישי · overdue</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">הוסף קרדיט OpenAI</div><div class="task-meta priority-p2">P2 · טכנולוגיה</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⏳ ממתין / July</div>
+      <div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">פגישת שותפים Austaras</div><div class="task-meta">July 1</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">הזמן בדיקות מתכת קנדה (SGS/BV/Intertek)</div><div class="task-meta">July · אמזון קנדה</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Request a Review — 5 ASINs (אחרי העלאת Hero V2)</div><div class="task-meta">אמזון</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AMAZON -->
+  <div id="amazon" class="section">
+    <div class="card">
+      <div class="card-title">📤 Uploads — עדיפות</div>
+      <div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">CPSIA flat file v3</div><div class="task-meta priority-p1">P1 · Enforcement July 27</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Hero V2 — titles + bullets + descriptions</div><div class="task-meta">קובץ: ~/Desktop/Codex/flat-files/2026-06-27-hero-v2-titles-bullets.txt</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Non-hero title fix v2</div><div class="task-meta">SC → Add Products via Upload</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Backend search terms</div><div class="task-meta">קובץ: ~/Desktop/Codex/flat-files/2026-06-27-backend-search-terms.txt</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 A+ Content</div>
+      <div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Module 1 — בנר Canva 970×600px</div><div class="task-meta">due June 28</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Module 4 — Gift Pouch photo (300×400px)</div><div class="task-meta">due June 28 · צלם עם iPhone</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Module 5 — Cross-sell x3 (220×220px)</div><div class="task-meta">due June 28 · Fish Hook + Plumeria + Bangle</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 Prime Day — July 7–10</div>
+      <div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">הגש קופונים לכל 5 ASINs</div><div class="task-meta">15% Fish Hook Silver/Gold · 12% Plumeria/Honu · 10% Bangle · due July 1</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Lightning Deal — B01MTJNYHE (Fish Hook Silver)</div><div class="task-meta">20% · 20–30 units · due July 1</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">PPC חייב לרוץ לפני July 7</div><div class="task-meta">קמפיינים + קופון = מכפיל</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🛍️ Virtual Bundles (מוכן לעלות)</div>
+      <div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Bundle 1: Fish Hook Silver + Plumeria</div><div class="task-meta">SC → Brands → Virtual Bundles → Create a bundle</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Bundle 2: Plumeria + Hibiscus Bangle</div><div class="task-meta">קופי מוכן</div></div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div><div class="task-text">Bundle 3: Honu + Fish Hook</div><div class="task-meta">קופי מוכן</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div id="portfolio" class="section">
+    <div class="card">
+      <div class="card-title">💵 מזומן פנוי</div>
+      <div class="cash-row">
+        <span class="cash-label">סה״כ לפריסה</span>
+        <span class="cash-value big">₪10,655</span>
+      </div>
+      <div class="cash-row">
+        <span class="cash-label">קיים</span>
+        <span class="cash-value">₪655</span>
+      </div>
+      <div class="cash-row">
+        <span class="cash-label">נכנס (25/06)</span>
+        <span class="cash-value">₪10,000</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Meitav — תיק נוכחי</div>
+      <div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">IBI</div><div class="holding-name">IBI Investment House</div></div>
+          <div class="holding-right"><div class="holding-value">₪1,960</div><div class="holding-impact neutral">~19%</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">OPC</div><div class="holding-name">OPC Energy</div></div>
+          <div class="holding-right"><div class="holding-value">₪1,673</div><div class="holding-impact neutral">~16%</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">SPCX</div><div class="holding-name">Space Economy ETF</div></div>
+          <div class="holding-right"><div class="holding-value">₪560</div><div class="holding-impact neutral">~5%</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">Doral</div><div class="holding-name">Doral Energy</div></div>
+          <div class="holding-right"><div class="holding-value">₪512</div><div class="holding-impact neutral">~5%</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">Enlight</div><div class="holding-name">Enlight Energy</div></div>
+          <div class="holding-right"><div class="holding-value">₪486</div><div class="holding-impact neutral">~5%</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">Max</div><div class="holding-name">Max Stock</div></div>
+          <div class="holding-right"><div class="holding-value">₪376</div><div class="holding-impact neutral">~4%</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">MRNA</div><div class="holding-name">Moderna</div></div>
+          <div class="holding-right"><div class="holding-value">₪361</div><div class="holding-impact neutral">~3.5%</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">Elad</div><div class="holding-name">Elad Software</div></div>
+          <div class="holding-right"><div class="holding-value">₪225</div><div class="holding-impact neutral">~2%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⏳ Pending (מחקר גבוה)</div>
+      <div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">VRT</div><div class="holding-name">Vertiv — כניסה &lt;$130</div></div>
+          <div class="holding-right"><div class="holding-value">Score 89</div><div class="holding-impact positive">₪1,500–2,000</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">GEV</div><div class="holding-name">GE Vernova — כניסה &lt;$1,000</div></div>
+          <div class="holding-right"><div class="holding-value">Score 86</div><div class="holding-impact positive">₪4,000–5,000</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">ETN</div><div class="holding-name">Eaton — כניסה &lt;$390</div></div>
+          <div class="holding-right"><div class="holding-value">Score 83</div><div class="holding-impact positive">₪1,400–2,800</div></div>
+        </div>
+        <div class="holding-row">
+          <div class="holding-left"><div class="holding-ticker">TSLA</div><div class="holding-name">Tesla (Discount → Meitav)</div></div>
+          <div class="holding-right"><div class="holding-value">₪2,219</div><div class="holding-impact neutral">העברה בתהליך</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="showSection('invest'); setNav(this)">
+    <div class="nav-icon">📈</div>
+    <div>השקעות</div>
+  </div>
+  <div class="nav-item" onclick="showSection('tasks'); setNav(this)">
+    <div class="nav-icon">✅</div>
+    <div>משימות</div>
+  </div>
+  <div class="nav-item" onclick="showSection('amazon'); setNav(this)">
+    <div class="nav-icon">📦</div>
+    <div>אמזון</div>
+  </div>
+  <div class="nav-item" onclick="showSection('portfolio'); setNav(this)">
+    <div class="nav-icon">💼</div>
+    <div>תיק</div>
+  </div>
+</div>
+
+<script type="application/json" id="radar-data">
+{
+  "updated": null,
+  "executeToday": [
+    { "ticker": "VRT",  "name": "Vertiv",    "price": null, "target": "<$130", "status": "check" },
+    { "ticker": "ETN",  "name": "Eaton",      "price": null, "target": "<$390", "status": "check" },
+    { "ticker": "SPCX", "name": "SPCX ETF",   "price": null, "target": "current", "status": "check" },
+    { "ticker": "GEV",  "name": "GE Vernova", "price": null, "target": "<$1,000", "status": "check" }
+  ],
+  "actionCards": [],
+  "watchlist": [],
+  "summary": "הדשבורד יתעדכן אוטומטית כל בוקר עם נתוני השוק העדכניים."
+}
+</script>
+
+<script>
+  // Date display
+  const now = new Date();
+  const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  document.getElementById('date-display').textContent =
+    `${days[now.getDay()]}, ${now.toLocaleDateString('he-IL')}`;
+
+  // Load radar data
+  function loadRadarData() {
+    try {
+      const raw = document.getElementById('radar-data').textContent;
+      const data = JSON.parse(raw);
+
+      if (data.updated) {
+        const d = new Date(data.updated);
+        document.getElementById('last-updated-display').textContent =
+          `עדכון אחרון: ${d.toLocaleString('he-IL')}`;
+      } else {
+        document.getElementById('last-updated-display').textContent = 'ממתין לעדכון הבוקר הראשון';
+      }
+
+      // Execute grid
+      const statusMap = {
+        buy: { label: '✅ קנה עכשיו', cls: 'buy' },
+        wait: { label: '⏳ המתן', cls: 'wait' },
+        above: { label: '⚠️ מעל יעד', cls: 'above' },
+        check: { label: '🔍 בדוק', cls: 'check' }
+      };
+
+      const grid = document.getElementById('execute-grid');
+      grid.innerHTML = data.executeToday.map(item => {
+        const s = statusMap[item.status] || statusMap.check;
+        return `<div class="execute-item">
+          <div class="ticker">${item.ticker}</div>
+          <div class="price">${item.price ? '$' + item.price : '—'}</div>
+          <div class="target">${item.target}</div>
+          <span class="status-badge ${s.cls}">${s.label}</span>
+        </div>`;
+      }).join('');
+
+      // Action cards
+      const container = document.getElementById('action-cards-container');
+      if (data.actionCards && data.actionCards.length > 0) {
+        container.innerHTML = data.actionCards.map(card => `
+          <div class="action-card">
+            <div class="action-header">
+              <div class="action-ticker">${card.ticker} <span style="font-size:13px;color:var(--muted);font-weight:400">${card.name}</span></div>
+              <div class="action-score">${card.score}/100</div>
+            </div>
+            <div class="action-thesis">${card.thesis}</div>
+            <div class="action-row">
+              <span class="action-label">פעולה:</span>
+              <span style="color:var(--green);font-weight:600">${card.action}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Watchlist
+      if (data.watchlist && data.watchlist.length > 0) {
+        document.getElementById('watchlist-container').innerHTML = data.watchlist.map(w => `
+          <div class="watch-item">
+            <div>
+              <div class="watch-ticker">${w.ticker}</div>
+              <div class="watch-note">${w.note || ''}</div>
+            </div>
+            <div class="watch-alert">${w.alert || ''}</div>
+          </div>
+        `).join('');
+      }
+
+      // Summary
+      if (data.summary) {
+        document.getElementById('summary-text').textContent = data.summary;
+      }
+
+    } catch(e) {
+      console.error('Error loading radar data:', e);
+    }
+  }
+
+  loadRadarData();
+
+  // Tab switching
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const tabs = document.querySelectorAll('.tab');
+    const sectionMap = { invest: 0, tasks: 1, amazon: 2, portfolio: 3 };
+    tabs[sectionMap[id]].classList.add('active');
+  }
+
+  function setNav(el) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // Task toggle
+  function toggleTask(el) {
+    el.classList.toggle('done');
+    const cb = el.querySelector('.task-checkbox');
+    cb.innerHTML = el.classList.contains('done') ? '✓' : '';
+    saveTaskState();
+  }
+
+  // Persist task state in sessionStorage (resets on page close — intentional)
+  function saveTaskState() {
+    const states = {};
+    document.querySelectorAll('.task-item').forEach((el, i) => {
+      states[i] = el.classList.contains('done');
+    });
+    sessionStorage.setItem('task-states', JSON.stringify(states));
+  }
+
+  function restoreTaskState() {
+    const saved = sessionStorage.getItem('task-states');
+    if (!saved) return;
+    const states = JSON.parse(saved);
+    document.querySelectorAll('.task-item').forEach((el, i) => {
+      if (states[i]) {
+        el.classList.add('done');
+        el.querySelector('.task-checkbox').innerHTML = '✓';
+      }
+    });
+  }
+
+  restoreTaskState();
+</script>
+
+</body>
+</html>
