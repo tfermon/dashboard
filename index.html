@@ -84,9 +84,22 @@
     .ap-title{font-size:14px;font-weight:700}
     .ap-tag{font-size:10px;background:rgba(244,185,66,.2);color:var(--yellow);border-radius:6px;padding:2px 8px;font-weight:600}
     .ap-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+    /* binary approve/reject */
     .ap-actions{display:flex;gap:8px}
     .btn-approve{background:var(--green);color:#fff;border:none;border-radius:8px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;flex:1}
     .btn-reject{background:var(--card);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:6px 16px;font-size:13px;cursor:pointer}
+    /* multi-choice options */
+    .ap-options{display:flex;flex-direction:column;gap:7px}
+    .ap-option{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:border-color .15s,background .15s;text-align:right}
+    .ap-option:active{background:var(--card2)}
+    .ap-option-icon{font-size:20px;flex-shrink:0}
+    .ap-option-body{flex:1}
+    .ap-option-label{font-size:13px;font-weight:600}
+    .ap-option-note{font-size:11px;color:var(--muted);margin-top:1px;line-height:1.4}
+    .ap-option.opt-green{border-color:rgba(61,186,109,.4)}
+    .ap-option.opt-yellow{border-color:rgba(244,185,66,.4)}
+    .ap-option.opt-red{border-color:rgba(224,92,92,.4)}
+    .ap-option.opt-blue{border-color:rgba(108,99,255,.4)}
 
     /* INVEST */
     .exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -453,8 +466,13 @@
       "id": "ap2",
       "title": "הגדרת TSLA כתזה EV/AI בתיק",
       "category": "השקעות",
-      "description": "TSLA לא ממופה לאף תזה קיימת. אפשרות 1: הגדר כתזה EV+Autonomy (רובוטיקה, אנרגיה). אפשרות 2: מכור ופנה הון ל-ETN. המלצה: המתן לקבלת המניות ואז החלט לאחר Morning Radar.",
-      "action": "המתן לקבלת TSLA ואז החלט"
+      "description": "TSLA לא ממופה לאף תזה קיימת. 2 מניות בהעברה מ-Discount → Meitav (פניה 199930559, due 30/6). מה עושים?",
+      "options": [
+        {"icon":"⏳","label":"המתן לקבלת המניות","note":"המתן עד 30/6, אז קבל החלטה אחרי Morning Radar","color":"opt-blue"},
+        {"icon":"💹","label":"מכור ופנה הון ל-ETN / GEV","note":"אם ETN ≤$390 ביום קבלה — מכור TSLA ותיכנס","color":"opt-green"},
+        {"icon":"🔵","label":"החזק כתזה EV + Autonomy","note":"רובוטיקה, אנרגיה, FSD — תזה ארוכת טווח","color":"opt-yellow"},
+        {"icon":"❌","label":"מכור הכל — לא מתאים לתיק","note":"פנה את ההון לתיק ה-AI Power הקיים","color":"opt-red"}
+      ]
     }
   ]
 }
@@ -590,6 +608,7 @@ function renderApprovals() {
     const data = JSON.parse(document.getElementById('radar-data').textContent);
     const aps = data.approvals || [];
     const dismissed = JSON.parse(sessionStorage.getItem('dismissed-ap')||'[]');
+    const choices = JSON.parse(sessionStorage.getItem('choices-ap')||'{}');
     const pending = aps.filter(a => !dismissed.includes(a.id));
     document.getElementById('ap-count').textContent = pending.length;
 
@@ -598,20 +617,47 @@ function renderApprovals() {
       container.innerHTML = '<div class="empty">אין פריטים הממתינים לאישורך</div>';
       return;
     }
-    container.innerHTML = pending.map(a => `
-      <div class="ap-item" id="ap-${a.id}">
+
+    container.innerHTML = pending.map(a => {
+      const actionsHtml = a.options
+        ? `<div class="ap-options">${a.options.map((opt,i) =>
+            `<div class="ap-option ${opt.color||''}" onclick="chooseOption('${a.id}',${i},'${opt.label.replace(/'/g,"\\'")}')">
+              <div class="ap-option-icon">${opt.icon}</div>
+              <div class="ap-option-body">
+                <div class="ap-option-label">${opt.label}</div>
+                <div class="ap-option-note">${opt.note}</div>
+              </div>
+            </div>`
+          ).join('')}</div>`
+        : `<div class="ap-actions">
+            <button class="btn-approve" onclick="approveItem('${a.id}')">✅ אשר</button>
+            <button class="btn-reject" onclick="dismissItem('${a.id}')">✗ דחה</button>
+           </div>`;
+
+      return `<div class="ap-item" id="ap-${a.id}">
         <div class="ap-header">
           <div class="ap-title">${a.title}</div>
           <div class="ap-tag">${a.category}</div>
         </div>
         <div class="ap-desc">${a.description}</div>
-        <div class="ap-actions">
-          <button class="btn-approve" onclick="approveItem('${a.id}')">✅ אשר</button>
-          <button class="btn-reject" onclick="dismissItem('${a.id}')">✗ דחה</button>
-        </div>
-      </div>
-    `).join('');
-  } catch(e) {}
+        ${actionsHtml}
+      </div>`;
+    }).join('');
+  } catch(e) { console.error(e); }
+}
+
+function chooseOption(id, idx, label) {
+  const el = document.getElementById('ap-'+id);
+  el.style.borderColor = 'var(--green)';
+  el.innerHTML = `<div style="padding:10px">
+    <div style="color:var(--green);font-weight:700;font-size:14px;margin-bottom:4px">✅ נבחר</div>
+    <div style="font-size:13px">${label}</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:3px">הבחירה נשמרה</div>
+  </div>`;
+  const choices = JSON.parse(sessionStorage.getItem('choices-ap')||'{}');
+  choices[id] = {idx, label};
+  sessionStorage.setItem('choices-ap', JSON.stringify(choices));
+  setTimeout(() => dismissItem(id), 2000);
 }
 
 function approveItem(id) {
