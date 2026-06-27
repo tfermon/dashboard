@@ -2,760 +2,689 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Dashboard">
+  <meta name="apple-mobile-web-app-title" content="Tal Dashboard">
   <title>Tal's Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    :root{
+      --bg:#0d0d12;--card:#16161f;--card2:#1e1e2a;--border:#252533;
+      --accent:#6c63ff;--accent2:#ff6584;--green:#3dba6d;--yellow:#f4b942;
+      --red:#e05c5c;--text:#eeeef5;--muted:#7777aa;--radius:14px;
+      --nlp:#9b59b6;--amazon:#e67e22;--invest:#27ae60;--trees:#16a085;--personal:#2980b9;--bills:#c0392b;
+    }
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;min-height:100vh;padding-bottom:72px;overflow-x:hidden}
 
-    :root {
-      --bg: #0f0f13;
-      --card: #1a1a22;
-      --card2: #22222e;
-      --accent: #6c63ff;
-      --accent2: #ff6584;
-      --green: #4caf78;
-      --yellow: #f4b942;
-      --red: #e05c5c;
-      --text: #f0f0f5;
-      --muted: #8888aa;
-      --border: #2e2e3e;
-      --radius: 14px;
-    }
+    /* HEADER */
+    .header{background:linear-gradient(135deg,#13131e,#1a1a2e);padding:16px 16px 12px;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
+    .header-row{display:flex;justify-content:space-between;align-items:center}
+    .header h1{font-size:19px;font-weight:700}
+    .header h1 span{color:var(--accent)}
+    .date-pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--muted)}
+    .updated{font-size:11px;color:var(--muted);margin-top:5px}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 15px;
-      min-height: 100vh;
-      padding-bottom: 80px;
-    }
+    /* TABS */
+    .tabs{display:flex;gap:6px;padding:10px 14px 0;background:var(--bg);overflow-x:auto;scrollbar-width:none;position:sticky;top:66px;z-index:99}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .tab.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
 
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      padding: 20px 16px 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .header h1 { font-size: 20px; font-weight: 700; }
-    .header h1 span { color: var(--accent); }
-    .date-pill {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .last-updated {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
+    /* CONTENT */
+    .content{padding:12px 12px}
+    .section{display:none}.section.active{display:block}
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 6px;
-      padding: 12px 16px 0;
-      background: var(--bg);
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      position: sticky;
-      top: 73px;
-      z-index: 99;
-    }
-    .tabs::-webkit-scrollbar { display: none; }
-    .tab {
-      flex-shrink: 0;
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--muted);
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-    .tab.active {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-      font-weight: 600;
-    }
+    /* CARD */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+    .card-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;font-weight:600;display:flex;align-items:center;justify-content:space-between}
+    .card-title .count{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:1px 8px;font-size:11px;color:var(--muted)}
 
-    /* Content */
-    .content { padding: 14px 14px; }
-    .section { display: none; }
-    .section.active { display: block; }
+    /* PROJECT GROUP */
+    .proj-group{margin-bottom:8px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+    .proj-header{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;user-select:none;background:var(--card2)}
+    .proj-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+    .proj-name{font-size:13px;font-weight:600;flex:1}
+    .proj-count{font-size:11px;color:var(--muted);background:var(--bg);border-radius:8px;padding:2px 7px}
+    .proj-chevron{color:var(--muted);font-size:12px;transition:transform .2s}
+    .proj-group.open .proj-chevron{transform:rotate(90deg)}
+    .proj-tasks{display:none;padding:0 12px}
+    .proj-group.open .proj-tasks{display:block}
 
-    /* Cards */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-    .card-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
+    /* TASK ITEM */
+    .task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+    .task-item:last-child{border-bottom:none}
+    .task-cb{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s}
+    .task-item.done .task-cb{background:var(--green);border-color:var(--green);color:#fff}
+    .task-item.done .task-text{text-decoration:line-through;color:var(--muted)}
+    .task-body{flex:1;min-width:0}
+    .task-text{font-size:14px;line-height:1.4}
+    .task-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;white-space:pre-wrap}
+    .task-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+    .task-tag{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
+    .p1{background:rgba(224,92,92,.18);color:var(--red)}
+    .p2{background:rgba(244,185,66,.15);color:var(--yellow)}
+    .p3{background:rgba(119,119,170,.15);color:var(--muted)}
+    .overdue{background:rgba(224,92,92,.25);color:var(--red)}
+    .tag-due{font-size:10px;color:var(--muted);padding:2px 6px;background:var(--card2);border-radius:6px}
 
-    /* Execute Today */
-    .execute-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .execute-item {
-      background: var(--card2);
-      border-radius: 10px;
-      padding: 12px;
-      border: 1px solid var(--border);
-    }
-    .execute-item .ticker { font-size: 18px; font-weight: 700; }
-    .execute-item .price { font-size: 13px; color: var(--muted); margin: 2px 0; }
-    .execute-item .target { font-size: 11px; color: var(--muted); }
-    .status-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-top: 6px;
-    }
-    .buy { background: rgba(76,175,120,0.2); color: var(--green); }
-    .wait { background: rgba(244,185,66,0.2); color: var(--yellow); }
-    .above { background: rgba(224,92,92,0.2); color: var(--red); }
-    .check { background: rgba(108,99,255,0.2); color: var(--accent); }
+    /* BOTTLENECK */
+    .bn-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .bn-item:last-child{border-bottom:none}
+    .bn-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+    .bn-body{flex:1}
+    .bn-title{font-size:14px;font-weight:600}
+    .bn-desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+    .bn-action{margin-top:6px;display:inline-block;background:var(--accent);color:#fff;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none}
 
-    /* Cash bar */
-    .cash-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .cash-row:last-child { border-bottom: none; }
-    .cash-label { color: var(--muted); font-size: 13px; }
-    .cash-value { font-weight: 700; font-size: 15px; }
-    .cash-value.big { font-size: 22px; color: var(--green); }
+    /* APPROVAL PIPELINE */
+    .ap-item{background:var(--card2);border:1px solid var(--yellow);border-radius:10px;padding:12px;margin-bottom:8px}
+    .ap-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .ap-title{font-size:14px;font-weight:700}
+    .ap-tag{font-size:10px;background:rgba(244,185,66,.2);color:var(--yellow);border-radius:6px;padding:2px 8px;font-weight:600}
+    .ap-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+    .ap-actions{display:flex;gap:8px}
+    .btn-approve{background:var(--green);color:#fff;border:none;border-radius:8px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;flex:1}
+    .btn-reject{background:var(--card);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:6px 16px;font-size:13px;cursor:pointer}
 
-    /* Portfolio */
-    .holding-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .holding-row:last-child { border-bottom: none; }
-    .holding-left { display: flex; flex-direction: column; gap: 2px; }
-    .holding-ticker { font-weight: 700; font-size: 15px; }
-    .holding-name { font-size: 12px; color: var(--muted); }
-    .holding-right { text-align: left; }
-    .holding-value { font-weight: 600; font-size: 14px; }
-    .holding-impact {
-      font-size: 11px;
-      margin-top: 2px;
-    }
-    .positive { color: var(--green); }
-    .negative { color: var(--red); }
-    .neutral { color: var(--muted); }
+    /* INVEST */
+    .exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .exec-item{background:var(--card2);border-radius:10px;padding:12px;border:1px solid var(--border)}
+    .exec-ticker{font-size:18px;font-weight:800}
+    .exec-name{font-size:11px;color:var(--muted);margin:1px 0}
+    .exec-price{font-size:13px;color:var(--text);margin:2px 0}
+    .exec-target{font-size:11px;color:var(--muted)}
+    .sbadge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-top:5px}
+    .s-buy{background:rgba(61,186,109,.2);color:var(--green)}
+    .s-wait{background:rgba(244,185,66,.2);color:var(--yellow)}
+    .s-above{background:rgba(224,92,92,.2);color:var(--red)}
+    .s-check{background:rgba(108,99,255,.2);color:var(--accent)}
 
-    /* Tasks */
-    .task-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-    }
-    .task-item:last-child { border-bottom: none; }
-    .task-checkbox {
-      width: 20px;
-      height: 20px;
-      border-radius: 6px;
-      border: 2px solid var(--border);
-      flex-shrink: 0;
-      margin-top: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-    .task-item.done .task-checkbox {
-      background: var(--green);
-      border-color: var(--green);
-    }
-    .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
-    .task-text { font-size: 14px; line-height: 1.4; flex: 1; }
-    .task-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .priority-p1 { color: var(--red); font-weight: 600; }
-    .priority-p2 { color: var(--yellow); }
+    /* PIE CHART */
+    .chart-wrap{position:relative;height:200px;margin:10px 0}
+    .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+    .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-    /* Summary */
-    .summary-box {
-      background: linear-gradient(135deg, var(--accent) 0%, #9c27b0 100%);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 10px;
-    }
-    .summary-box p { font-size: 14px; line-height: 1.6; opacity: 0.95; }
+    /* PORTFOLIO */
+    .hold-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+    .hold-row:last-child{border-bottom:none}
+    .hold-left{display:flex;flex-direction:column;gap:1px}
+    .hold-ticker{font-weight:700;font-size:15px}
+    .hold-name{font-size:11px;color:var(--muted)}
+    .hold-right{text-align:left}
+    .hold-val{font-weight:600;font-size:13px}
+    .hold-note{font-size:11px;margin-top:1px}
+    .pos{color:var(--green)}.neg{color:var(--red)}.neu{color:var(--muted)}
 
-    /* Action card */
-    .action-card {
-      background: var(--card2);
-      border: 1px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-    .action-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .action-ticker { font-size: 20px; font-weight: 800; }
-    .action-score {
-      background: var(--accent);
-      color: white;
-      border-radius: 8px;
-      padding: 3px 10px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-    .action-thesis { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
-    .action-row { display: flex; justify-content: space-between; font-size: 13px; margin-top: 6px; }
-    .action-label { color: var(--muted); }
+    /* CASH */
+    .cash-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+    .cash-row:last-child{border-bottom:none}
+    .cash-label{color:var(--muted);font-size:13px}
+    .cash-val{font-weight:700;font-size:15px}
+    .cash-val.big{font-size:22px;color:var(--green)}
 
-    /* Bottom nav */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-      display: flex;
-      padding: 8px 0 env(safe-area-inset-bottom, 8px);
-      z-index: 200;
-    }
-    .nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      padding: 6px;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 10px;
-      transition: color 0.2s;
-    }
-    .nav-item.active { color: var(--accent); }
-    .nav-icon { font-size: 20px; line-height: 1; }
+    /* SUMMARY BOX */
+    .summary-box{background:linear-gradient(135deg,var(--accent),#9c27b0);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+    .summary-box p{font-size:13px;line-height:1.6;opacity:.95}
 
-    /* Refresh button */
-    .refresh-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      width: 100%;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-    .refresh-btn:active { opacity: 0.8; }
+    /* BOTTOM NAV */
+    .bnav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;padding:6px 0 env(safe-area-inset-bottom,6px);z-index:200}
+    .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px;cursor:pointer;color:var(--muted);font-size:10px;transition:color .2s}
+    .bnav-item.active{color:var(--accent)}
+    .bnav-icon{font-size:19px;line-height:1}
 
-    /* Watchlist */
-    .watch-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .watch-item:last-child { border-bottom: none; }
-    .watch-ticker { font-weight: 700; font-size: 15px; }
-    .watch-note { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .watch-alert { font-size: 12px; color: var(--yellow); }
-
-    .divider { height: 1px; background: var(--border); margin: 8px 0; }
-    .empty-state { text-align: center; color: var(--muted); padding: 30px; font-size: 14px; }
+    /* MISC */
+    .divider{height:1px;background:var(--border);margin:8px 0}
+    .empty{text-align:center;color:var(--muted);padding:24px;font-size:13px}
+    .section-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 6px;font-weight:600}
+    .alert-banner{background:rgba(224,92,92,.12);border:1px solid rgba(224,92,92,.3);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;color:var(--red)}
+    .watchlist-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+    .watchlist-item:last-child{border-bottom:none}
+    .w-ticker{font-weight:700}
+    .w-note{font-size:11px;color:var(--muted);margin-top:1px}
+    .w-alert{font-size:11px;color:var(--yellow)}
   </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-top">
+  <div class="header-row">
     <h1>Tal's <span>Dashboard</span></h1>
-    <div class="date-pill" id="date-display"></div>
+    <div class="date-pill" id="dateDisplay"></div>
   </div>
-  <div class="last-updated" id="last-updated-display">טוען נתונים...</div>
+  <div class="updated" id="updatedDisplay">טוען...</div>
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="showSection('invest')">📈 השקעות</div>
-  <div class="tab" onclick="showSection('tasks')">✅ משימות</div>
-  <div class="tab" onclick="showSection('amazon')">📦 אמזון</div>
-  <div class="tab" onclick="showSection('portfolio')">💼 תיק</div>
+  <div class="tab active" onclick="nav('tasks',0)">✅ משימות</div>
+  <div class="tab" onclick="nav('bottleneck',1)">🚦 צוואר בקבוק</div>
+  <div class="tab" onclick="nav('approvals',2)">🎯 אישורים</div>
+  <div class="tab" onclick="nav('invest',3)">📈 השקעות</div>
+  <div class="tab" onclick="nav('portfolio',4)">💼 תיק</div>
 </div>
 
 <div class="content">
 
-  <!-- INVESTMENTS -->
-  <div id="invest" class="section active">
-    <div id="execute-today-card" class="card">
-      <div class="card-title">⚡ Execute Today?</div>
-      <div class="execute-grid" id="execute-grid">
-        <!-- populated by JS -->
-      </div>
-    </div>
-
-    <div id="action-cards-container">
-      <!-- populated by JS -->
-    </div>
-
-    <div class="card">
-      <div class="card-title">👁️ Watchlist</div>
-      <div id="watchlist-container">
-        <div class="empty-state">אין נתונים — ממתין לעדכון הבוקר</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">💬 תקציר</div>
-      <div class="summary-box">
-        <p id="summary-text">הדשבורד יתעדכן אוטומטית כל בוקר עם נתונים טריים.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- TASKS -->
-  <div id="tasks" class="section">
-    <div class="card">
-      <div class="card-title">🔴 P1 — דחוף היום</div>
-      <div id="tasks-p1">
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">העלה CPSIA flat file v3 ל-SC</div><div class="task-meta priority-p1">P1 · אמזון · Enforcement July 27</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">העלה Hero V2 flat file ל-SC</div><div class="task-meta priority-p1">P1 · אמזון · קובץ מוכן</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">בדוק תגובת Discount Bank להעברת TSLA</div><div class="task-meta priority-p1">P1 · השקעות · פניה 199930559, due 30/6</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">בדוק התראת אבטחה MSK MyChart</div><div class="task-meta priority-p1">P1 · אישי</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🟡 P2 — השבוע</div>
-      <div id="tasks-p2">
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">בנה Brand Store ב-SC</div><div class="task-meta priority-p2">P2 · אמזון · due June 30</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">הפעל PPC campaigns</div><div class="task-meta priority-p2">P2 · אמזון · due June 30</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">בנר Canva 970×600px לModule 1</div><div class="task-meta priority-p2">P2 · אמזון · due June 28</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">צלם gift pouch לModule 4</div><div class="task-meta priority-p2">P2 · אמזון · due June 28</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">שלח קופונים Prime Day ל-5 ASINs</div><div class="task-meta priority-p2">P2 · אמזון · due July 1</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">פגישה עם דור אליאב</div><div class="task-meta priority-p2">P2 · שני בבוקר June 29</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">בחינת NLP</div><div class="task-meta priority-p2">P2 · June 30</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">שלם חשבון אבן יהודה</div><div class="task-meta priority-p2">P2 · אישי · overdue</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">הוסף קרדיט OpenAI</div><div class="task-meta priority-p2">P2 · טכנולוגיה</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">⏳ ממתין / July</div>
-      <div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">פגישת שותפים Austaras</div><div class="task-meta">July 1</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">הזמן בדיקות מתכת קנדה (SGS/BV/Intertek)</div><div class="task-meta">July · אמזון קנדה</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Request a Review — 5 ASINs (אחרי העלאת Hero V2)</div><div class="task-meta">אמזון</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AMAZON -->
-  <div id="amazon" class="section">
-    <div class="card">
-      <div class="card-title">📤 Uploads — עדיפות</div>
-      <div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">CPSIA flat file v3</div><div class="task-meta priority-p1">P1 · Enforcement July 27</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Hero V2 — titles + bullets + descriptions</div><div class="task-meta">קובץ: ~/Desktop/Codex/flat-files/2026-06-27-hero-v2-titles-bullets.txt</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Non-hero title fix v2</div><div class="task-meta">SC → Add Products via Upload</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Backend search terms</div><div class="task-meta">קובץ: ~/Desktop/Codex/flat-files/2026-06-27-backend-search-terms.txt</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📅 A+ Content</div>
-      <div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Module 1 — בנר Canva 970×600px</div><div class="task-meta">due June 28</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Module 4 — Gift Pouch photo (300×400px)</div><div class="task-meta">due June 28 · צלם עם iPhone</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Module 5 — Cross-sell x3 (220×220px)</div><div class="task-meta">due June 28 · Fish Hook + Plumeria + Bangle</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🎯 Prime Day — July 7–10</div>
-      <div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">הגש קופונים לכל 5 ASINs</div><div class="task-meta">15% Fish Hook Silver/Gold · 12% Plumeria/Honu · 10% Bangle · due July 1</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Lightning Deal — B01MTJNYHE (Fish Hook Silver)</div><div class="task-meta">20% · 20–30 units · due July 1</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">PPC חייב לרוץ לפני July 7</div><div class="task-meta">קמפיינים + קופון = מכפיל</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🛍️ Virtual Bundles (מוכן לעלות)</div>
-      <div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Bundle 1: Fish Hook Silver + Plumeria</div><div class="task-meta">SC → Brands → Virtual Bundles → Create a bundle</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Bundle 2: Plumeria + Hibiscus Bangle</div><div class="task-meta">קופי מוכן</div></div>
-        </div>
-        <div class="task-item" onclick="toggleTask(this)">
-          <div class="task-checkbox"></div>
-          <div><div class="task-text">Bundle 3: Honu + Fish Hook</div><div class="task-meta">קופי מוכן</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PORTFOLIO -->
-  <div id="portfolio" class="section">
-    <div class="card">
-      <div class="card-title">💵 מזומן פנוי</div>
-      <div class="cash-row">
-        <span class="cash-label">סה״כ לפריסה</span>
-        <span class="cash-value big">₪10,655</span>
-      </div>
-      <div class="cash-row">
-        <span class="cash-label">קיים</span>
-        <span class="cash-value">₪655</span>
-      </div>
-      <div class="cash-row">
-        <span class="cash-label">נכנס (25/06)</span>
-        <span class="cash-value">₪10,000</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 Meitav — תיק נוכחי</div>
-      <div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">IBI</div><div class="holding-name">IBI Investment House</div></div>
-          <div class="holding-right"><div class="holding-value">₪1,960</div><div class="holding-impact neutral">~19%</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">OPC</div><div class="holding-name">OPC Energy</div></div>
-          <div class="holding-right"><div class="holding-value">₪1,673</div><div class="holding-impact neutral">~16%</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">SPCX</div><div class="holding-name">Space Economy ETF</div></div>
-          <div class="holding-right"><div class="holding-value">₪560</div><div class="holding-impact neutral">~5%</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">Doral</div><div class="holding-name">Doral Energy</div></div>
-          <div class="holding-right"><div class="holding-value">₪512</div><div class="holding-impact neutral">~5%</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">Enlight</div><div class="holding-name">Enlight Energy</div></div>
-          <div class="holding-right"><div class="holding-value">₪486</div><div class="holding-impact neutral">~5%</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">Max</div><div class="holding-name">Max Stock</div></div>
-          <div class="holding-right"><div class="holding-value">₪376</div><div class="holding-impact neutral">~4%</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">MRNA</div><div class="holding-name">Moderna</div></div>
-          <div class="holding-right"><div class="holding-value">₪361</div><div class="holding-impact neutral">~3.5%</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">Elad</div><div class="holding-name">Elad Software</div></div>
-          <div class="holding-right"><div class="holding-value">₪225</div><div class="holding-impact neutral">~2%</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">⏳ Pending (מחקר גבוה)</div>
-      <div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">VRT</div><div class="holding-name">Vertiv — כניסה &lt;$130</div></div>
-          <div class="holding-right"><div class="holding-value">Score 89</div><div class="holding-impact positive">₪1,500–2,000</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">GEV</div><div class="holding-name">GE Vernova — כניסה &lt;$1,000</div></div>
-          <div class="holding-right"><div class="holding-value">Score 86</div><div class="holding-impact positive">₪4,000–5,000</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">ETN</div><div class="holding-name">Eaton — כניסה &lt;$390</div></div>
-          <div class="holding-right"><div class="holding-value">Score 83</div><div class="holding-impact positive">₪1,400–2,800</div></div>
-        </div>
-        <div class="holding-row">
-          <div class="holding-left"><div class="holding-ticker">TSLA</div><div class="holding-name">Tesla (Discount → Meitav)</div></div>
-          <div class="holding-right"><div class="holding-value">₪2,219</div><div class="holding-impact neutral">העברה בתהליך</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+<!-- ===== TASKS ===== -->
+<div id="tasks" class="section active">
+  <div id="tasks-container"></div>
 </div>
 
-<!-- Bottom Nav -->
-<div class="bottom-nav">
-  <div class="nav-item active" onclick="showSection('invest'); setNav(this)">
-    <div class="nav-icon">📈</div>
-    <div>השקעות</div>
+<!-- ===== BOTTLENECK ===== -->
+<div id="bottleneck" class="section">
+  <div class="card">
+    <div class="card-title">🚨 דחוף — ממתין לך עכשיו</div>
+    <div class="bn-item">
+      <div class="bn-icon">📤</div>
+      <div class="bn-body">
+        <div class="bn-title">4 flat files לא הועלו לסלר סנטרל</div>
+        <div class="bn-desc">CPSIA v3 (overdue), Hero V2, Non-hero v2, Backend search terms — כולם מוכנים, רק ממתינים להעלאה ידנית שלך</div>
+        <button class="bn-action" onclick="nav('tasks',0)">← ראה משימות אמזון</button>
+      </div>
+    </div>
+    <div class="bn-item">
+      <div class="bn-icon">📸</div>
+      <div class="bn-body">
+        <div class="bn-title">A+ תמונות — due June 28</div>
+        <div class="bn-desc">Module 1: בנר Canva 970×600px. Module 4: צלם gift pouch עם iPhone (300×400px). Module 5: 3 cross-sell shots.</div>
+      </div>
+    </div>
+    <div class="bn-item">
+      <div class="bn-icon">🚨</div>
+      <div class="bn-body">
+        <div class="bn-title">MSK MyChart — התראת אבטחה</div>
+        <div class="bn-desc">מכשיר חדש חובר לחשבון. אם לא אתה — התקשר 646-227-2593 מיידית.</div>
+      </div>
+    </div>
+    <div class="bn-item">
+      <div class="bn-icon">💳</div>
+      <div class="bn-body">
+        <div class="bn-title">תשלומים ממתינים</div>
+        <div class="bn-desc">אבן יהודה (overdue) · AT&T $124.36 (July 8) · Namecheap credit card update</div>
+      </div>
+    </div>
+    <div class="bn-item">
+      <div class="bn-icon">🌳</div>
+      <div class="bn-body">
+        <div class="bn-title">Hugs and Trees — 3 צווארי בקבוק P1</div>
+        <div class="bn-desc">Set up hugsandtrees.com · עדכן Namecheap credit card · Sketch ring installation design</div>
+      </div>
+    </div>
   </div>
-  <div class="nav-item" onclick="showSection('tasks'); setNav(this)">
-    <div class="nav-icon">✅</div>
-    <div>משימות</div>
-  </div>
-  <div class="nav-item" onclick="showSection('amazon'); setNav(this)">
-    <div class="nav-icon">📦</div>
-    <div>אמזון</div>
-  </div>
-  <div class="nav-item" onclick="showSection('portfolio'); setNav(this)">
-    <div class="nav-icon">💼</div>
-    <div>תיק</div>
+
+  <div class="card">
+    <div class="card-title">⏳ סקירה לפני שליחה / הגשה</div>
+    <div class="bn-item">
+      <div class="bn-icon">📝</div>
+      <div class="bn-body">
+        <div class="bn-title">מבחן NLP — June 30</div>
+        <div class="bn-desc">חזרה על M16, C2, M15, P15, P16 לפני הגשה. SSOT: ~/Claude/NLP/nlp-ssot.md</div>
+      </div>
+    </div>
+    <div class="bn-item">
+      <div class="bn-icon">💹</div>
+      <div class="bn-body">
+        <div class="bn-title">החלטת TSLA לפני June 30</div>
+        <div class="bn-desc">להחזיק? למכור ולפנות הון ל-ETN/VRT? צריך החלטה שלך לפני ביצוע ב-30/6.</div>
+      </div>
+    </div>
+    <div class="bn-item">
+      <div class="bn-icon">🎯</div>
+      <div class="bn-body">
+        <div class="bn-title">Prime Day — הגשה July 1</div>
+        <div class="bn-desc">קופונים ל-5 ASINs + Lightning Deal ל-B01MTJNYHE. תוכנית מוכנה, צריך הגשה ידנית ב-SC.</div>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- ===== APPROVALS ===== -->
+<div id="approvals" class="section">
+  <div class="card">
+    <div class="card-title">🎯 ממתין לאישורך <span class="count" id="ap-count">0</span></div>
+    <div id="approvals-container"></div>
+  </div>
+
+  <div class="card" style="margin-top:10px">
+    <div class="card-title">✅ אושר לאחרונה</div>
+    <div class="bn-item">
+      <div class="bn-icon">📦</div>
+      <div class="bn-body">
+        <div class="bn-title">Virtual Bundles — 3 bundles</div>
+        <div class="bn-desc">אושר ✓ · Copy מוכן להעלאה ב-SC → Brands → Virtual Bundles</div>
+      </div>
+    </div>
+    <div class="bn-item">
+      <div class="bn-icon">🎟️</div>
+      <div class="bn-body">
+        <div class="bn-title">Prime Day Coupon Strategy</div>
+        <div class="bn-desc">אושר ✓ · 15% Fish Hook, 12% Plumeria/Honu, 10% Bangle · Lightning Deal B01MTJNYHE</div>
+      </div>
+    </div>
+    <div class="bn-item">
+      <div class="bn-icon">🌐</div>
+      <div class="bn-body">
+        <div class="bn-title">GitHub Pages Dashboard</div>
+        <div class="bn-desc">אושר ✓ · חי בכתובת tfermon.github.io/dashboard</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INVEST ===== -->
+<div id="invest" class="section">
+  <div class="card" id="execute-card">
+    <div class="card-title">⚡ Execute Today?</div>
+    <div class="exec-grid" id="exec-grid">
+      <div class="exec-item">
+        <div class="exec-ticker">VRT</div>
+        <div class="exec-name">Vertiv</div>
+        <div class="exec-price">מחיר: ~$304</div>
+        <div class="exec-target">יעד: &lt;$130</div>
+        <span class="sbadge s-above">⚠️ stale thesis</span>
+      </div>
+      <div class="exec-item">
+        <div class="exec-ticker">ETN</div>
+        <div class="exec-name">Eaton</div>
+        <div class="exec-price">מחיר: ~$402</div>
+        <div class="exec-target">יעד: &lt;$390</div>
+        <span class="sbadge s-wait">⏳ 3% מעל יעד</span>
+      </div>
+      <div class="exec-item">
+        <div class="exec-ticker">SPCX</div>
+        <div class="exec-name">Space ETF</div>
+        <div class="exec-price">מחיר: ~$153</div>
+        <div class="exec-target">כבר מחזיק</div>
+        <span class="sbadge s-check">🔍 בדוק כמות</span>
+      </div>
+      <div class="exec-item">
+        <div class="exec-ticker">GEV</div>
+        <div class="exec-name">GE Vernova</div>
+        <div class="exec-price">מחיר: ~$1,057</div>
+        <div class="exec-target">יעד: &lt;$1,000</div>
+        <span class="sbadge s-wait">⏳ 6% מעל יעד</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🥧 פיזור לפי סקטור</div>
+    <div class="chart-wrap">
+      <canvas id="sectorChart"></canvas>
+    </div>
+    <div class="legend" id="sectorLegend"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌍 פיזור לפי שוק</div>
+    <div class="chart-wrap">
+      <canvas id="marketChart"></canvas>
+    </div>
+    <div class="legend" id="marketLegend"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💬 תקציר</div>
+    <div class="summary-box">
+      <p id="summary-text">₪10,655 זמין לפריסה. ETN ו-GEV מעל יעד ב-3–6%. VRT דורש הערכה מחדש של thesis (מחיר $304 vs יעד מקורי $130 — stale). שבת: בדוק TASE. ראשון: בדוק ETN אם ירד ל-$390.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">👁️ Watchlist</div>
+    <div class="watchlist-item">
+      <div><div class="w-ticker">ETN</div><div class="w-note">Eaton — data center power</div></div>
+      <div class="w-alert">התראה: $390</div>
+    </div>
+    <div class="watchlist-item">
+      <div><div class="w-ticker">GEV</div><div class="w-note">GE Vernova — grid infra</div></div>
+      <div class="w-alert">התראה: $1,000</div>
+    </div>
+    <div class="watchlist-item">
+      <div><div class="w-ticker">VRT</div><div class="w-note">Vertiv — data center cooling</div></div>
+      <div class="w-alert">בדוק thesis מחדש</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PORTFOLIO ===== -->
+<div id="portfolio" class="section">
+  <div class="card">
+    <div class="card-title">💵 מזומן פנוי</div>
+    <div class="cash-row"><span class="cash-label">סה״כ לפריסה</span><span class="cash-val big">₪10,655</span></div>
+    <div class="cash-row"><span class="cash-label">קיים במיטב</span><span class="cash-val">₪655</span></div>
+    <div class="cash-row"><span class="cash-label">הפקדה 25/06</span><span class="cash-val">₪10,000</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 המלצת פריסה (Trend to Trade)</div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">ETN</div><div class="hold-name">Eaton — כניסה אם ≤$390</div></div>
+      <div class="hold-right"><div class="hold-val pos">₪1,400–2,800</div><div class="hold-note neu">1–2 מניות · ראשון 30/6</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">GEV</div><div class="hold-name">GE Vernova — כניסה אם ≤$1,000</div></div>
+      <div class="hold-right"><div class="hold-val pos">₪4,000–5,000</div><div class="hold-note neu">שמור רזרבה · ראשון</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">הוספה — בדוק כמות קיימת</div></div>
+      <div class="hold-right"><div class="hold-val pos">₪570–1,140</div><div class="hold-note neu">1–2 מניות</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">CASH</div><div class="hold-name">רזרבה לאחר פריסה</div></div>
+      <div class="hold-right"><div class="hold-val neu">₪1,000–3,000</div><div class="hold-note neu">לא לרוקן לחלוטין</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 תיק נוכחי — Meitav</div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">IBI</div><div class="hold-name">IBI Investment House</div></div>
+      <div class="hold-right"><div class="hold-val">₪1,960</div><div class="hold-note pos">~19% · שוק הון ישראלי</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">OPC</div><div class="hold-name">OPC Energy</div></div>
+      <div class="hold-right"><div class="hold-val">₪1,673</div><div class="hold-note pos">~16% · AI → חשמל</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">Space Economy ETF</div></div>
+      <div class="hold-right"><div class="hold-val">₪560</div><div class="hold-note neu">~5% · כלכלת חלל</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">Doral</div><div class="hold-name">Doral Energy</div></div>
+      <div class="hold-right"><div class="hold-val">₪512</div><div class="hold-note pos">~5% · AI → חשמל</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">Enlight</div><div class="hold-name">Enlight Energy</div></div>
+      <div class="hold-right"><div class="hold-val">₪486</div><div class="hold-note pos">~5% · AI → חשמל</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">Max</div><div class="hold-name">Max Stock</div></div>
+      <div class="hold-right"><div class="hold-val">₪376</div><div class="hold-note neu">~4% · צריכה ישראלית</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">MRNA</div><div class="hold-name">Moderna</div></div>
+      <div class="hold-right"><div class="hold-val">₪361</div><div class="hold-note neg">~3.5% · ביוטק · סיכון גבוה</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">Elad</div><div class="hold-name">Elad Software</div></div>
+      <div class="hold-right"><div class="hold-val">₪225</div><div class="hold-note neu">~2% · תוכנה ישראלית</div></div>
+    </div>
+    <div class="hold-row">
+      <div class="hold-left"><div class="hold-ticker">TSLA</div><div class="hold-name">Tesla (בהעברה)</div></div>
+      <div class="hold-right"><div class="hold-val">₪2,219</div><div class="hold-note neg">⚠️ ממתין להחלטה</div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <div class="bnav-item active" onclick="nav('tasks',0)"><div class="bnav-icon">✅</div><div>משימות</div></div>
+  <div class="bnav-item" onclick="nav('bottleneck',1)"><div class="bnav-icon">🚦</div><div>צוואר</div></div>
+  <div class="bnav-item" onclick="nav('approvals',2)"><div class="bnav-icon">🎯</div><div>אישורים</div></div>
+  <div class="bnav-item" onclick="nav('invest',3)"><div class="bnav-icon">📈</div><div>השקעות</div></div>
+  <div class="bnav-item" onclick="nav('portfolio',4)"><div class="bnav-icon">💼</div><div>תיק</div></div>
+</div>
+
+<!-- RADAR DATA (updated by morning task) -->
 <script type="application/json" id="radar-data">
 {
-  "updated": null,
+  "updated": "2026-06-27T18:00:00+03:00",
+  "summary": "₪10,655 זמין לפריסה. ETN ו-GEV מעל יעד ב-3–6%. שבת: בדוק TASE. ראשון: בדוק ETN אם ירד ל-$390.",
   "executeToday": [
-    { "ticker": "VRT",  "name": "Vertiv",    "price": null, "target": "<$130", "status": "check" },
-    { "ticker": "ETN",  "name": "Eaton",      "price": null, "target": "<$390", "status": "check" },
-    { "ticker": "SPCX", "name": "SPCX ETF",   "price": null, "target": "current", "status": "check" },
-    { "ticker": "GEV",  "name": "GE Vernova", "price": null, "target": "<$1,000", "status": "check" }
+    {"ticker":"VRT","name":"Vertiv","price":304,"target":"<$130","status":"above","note":"stale thesis"},
+    {"ticker":"ETN","name":"Eaton","price":402,"target":"<$390","status":"wait","note":"3% מעל יעד"},
+    {"ticker":"SPCX","name":"SPCX ETF","price":153,"target":"current","status":"check","note":"בדוק כמות"},
+    {"ticker":"GEV","name":"GE Vernova","price":1057,"target":"<$1,000","status":"wait","note":"6% מעל יעד"}
   ],
-  "actionCards": [],
-  "watchlist": [],
-  "summary": "הדשבורד יתעדכן אוטומטית כל בוקר עם נתוני השוק העדכניים."
+  "approvals": [
+    {
+      "id": "ap1",
+      "title": "Parent-Child Variation — Fish Hook Silver + Gold",
+      "category": "אמזון",
+      "description": "להפוך את B01MTJNYHE (Silver) ו-B01M6E4XJG (Gold) ל-parent-child variation. מאגד reviews לפני Prime Day, משפר visibility. SC → Catalog → Manage Inventory → Add variation.",
+      "action": "פנייה ל-SC Seller Support לאיחוד ASIN"
+    },
+    {
+      "id": "ap2",
+      "title": "הגדרת TSLA כתזה EV/AI בתיק",
+      "category": "השקעות",
+      "description": "TSLA לא ממופה לאף תזה קיימת. אפשרות 1: הגדר כתזה EV+Autonomy (רובוטיקה, אנרגיה). אפשרות 2: מכור ופנה הון ל-ETN. המלצה: המתן לקבלת המניות ואז החלט לאחר Morning Radar.",
+      "action": "המתן לקבלת TSLA ואז החלט"
+    }
+  ]
 }
 </script>
 
 <script>
-  // Date display
-  const now = new Date();
-  const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-  document.getElementById('date-display').textContent =
-    `${days[now.getDay()]}, ${now.toLocaleDateString('he-IL')}`;
+// ====== DATA ======
+const TASKS = [
+  // NLP
+  {id:'nlp1',proj:'nlp',text:'📝 מבחן NLP — Hadas Wilf',desc:'שיעורי חזרה: M16, C2, M15, P15, P16\nSSoT: ~/Claude/NLP/nlp-ssot.md',pri:'p1',due:'2026-06-30'},
+  {id:'nlp2',proj:'nlp',text:'📚 NLP Phase 2: קבע שיעורים לתמלול',desc:'SSOT מוכן (32 שיעורים). בחר 3–5 ראשונים.',pri:'p3',due:null},
+  {id:'nlp3',proj:'nlp',text:'💳 הוסף קרדיט OpenAI Whisper API',desc:'platform.openai.com → Billing → $5 מינימום',pri:'p2',due:'2026-06-26',overdue:true},
+  // Amazon
+  {id:'az1',proj:'amazon',text:'📤 CPSIA flat file v3 → SC',desc:'~/Desktop/Codex/flat-files/2026-06-25-cpsia-title-fix-v3.txt\n⚠️ Enforcement July 27',pri:'p1',due:'2026-06-26',overdue:true},
+  {id:'az2',proj:'amazon',text:'📤 Hero V2 flat file → SC',desc:'~/Desktop/Codex/flat-files/2026-06-27-hero-v2-titles-bullets.txt\n5 ASINs: B01MTJNYHE, B01M6E4XJG, B07VCSP537, B0792CLRQD, B078XBGP9W',pri:'p1',due:'2026-06-27'},
+  {id:'az3',proj:'amazon',text:'📤 Non-hero title fix v2 → SC',desc:'~/Desktop/Codex/flat-files/2026-06-24-title-fix-non-hero-v2.txt',pri:'p1',due:'2026-06-27'},
+  {id:'az4',proj:'amazon',text:'🎨 A+ Module 1: בנר Canva 970×600px',desc:'Brief: ~/Desktop/Codex/reports/product-intelligence/2026-06-21-a-plus-content-brief.md',pri:'p1',due:'2026-06-28'},
+  {id:'az5',proj:'amazon',text:'📸 A+ Module 4: Gift Pouch 300×400px',desc:'צלם עם iPhone. רקע לבן. Module 4 = gift packaging selling point.',pri:'p1',due:'2026-06-28'},
+  {id:'az6',proj:'amazon',text:'🏪 Build Brand Store',desc:'SC → Stores → Manage Stores. מבנה: Home + 4 symbol pages + Gift Sets.',pri:'p2',due:'2026-06-30'},
+  {id:'az7',proj:'amazon',text:'📣 Launch PPC campaigns',desc:'Phase 1: Auto campaign per hero ASIN. Budget: $5–10/day.',pri:'p2',due:'2026-06-30'},
+  {id:'az8',proj:'amazon',text:'📤 Backend search terms → SC',desc:'~/Desktop/Codex/flat-files/2026-06-27-backend-search-terms.txt\naloha, beach, ocean, lei, luau, aumakua, surf, tribal...',pri:'p2',due:null},
+  {id:'az9',proj:'amazon',text:'🎟️ Prime Day — קופונים + Lightning Deal',desc:'קופונים: 15% FishHook, 12% Plumeria/Honu, 10% Bangle\nLightning Deal: B01MTJNYHE (20%)\nHגשה: July 1',pri:'p2',due:'2026-07-01'},
+  {id:'az10',proj:'amazon',text:'🔘 Request a Review — 5 ASINs',desc:'אחרי העלאת Hero V2. SC → Orders → Manage Orders → Request a Review.',pri:'p2',due:null},
+  {id:'az11',proj:'amazon',text:'🇨🇦 בדיקות מתכות Canada (SGS/BV/Intertek)',desc:'4 ASINs מושבתים בקנדה. CAD $800–1,800. 5–10 ימי עסקים.',pri:'p2',due:null},
+  {id:'az12',proj:'amazon',text:'🛒 בדוק חנות Walmart — האם נפתחה בטעות?',desc:'3 מיילים על הסרת פריטים. כנס ל-Walmart Seller Center.',pri:'p3',due:'2026-06-29'},
+  // Investments
+  {id:'inv1',proj:'invest',text:'🏦 STEP 3: בדוק תגובת Discount להעברת TSLA',desc:'פניה 199930559. DTC 158 / Apex Clearing / 2QI05131. אם אין תגובה — התקשר 03-5151111.',pri:'p1',due:'2026-06-30'},
+  {id:'inv2',proj:'invest',text:'💹 STEP 7: פרוס הון חדש',desc:'שבת: TASE. ראשון: ETN (אם ≤$390) + SPCX add + GEV reserve.',pri:'p2',due:'2026-07-01'},
+  {id:'inv3',proj:'invest',text:'❓ החלט מה לעשות עם TSLA',desc:'להחזיק כתזה EV/AI? למכור ולפנות ל-ETN? החלט לפני 30/6.',pri:'p1',due:'2026-06-30'},
+  {id:'inv4',proj:'invest',text:'📞 וודא שברי מניות (fractional) במיטב',desc:'מיטב טרייד: 03-7903555. שאל: האם ניתן לקנות שבר ב-VRT/ETN?',pri:'p1',due:'2026-06-30'},
+  {id:'inv5',proj:'invest',text:'✅ STEP 5: אשר TSLA במיטב',desc:'customers.meitav.co.il → הרכב נכסים. 2 מניות TSLA תחת מניה זרה.',pri:'p2',due:'2026-06-29'},
+  // Hugs & Trees
+  {id:'ht1',proj:'trees',text:'🌐 Set up hugsandtrees.com',desc:'Domain at Namecheap (Order #205788367). Landing page or coming-soon.',pri:'p1',due:null},
+  {id:'ht2',proj:'trees',text:'💳 Update Namecheap credit card',desc:'כרטיס פג תוקף — עדכן לפני שה-domain ייפוג.',pri:'p1',due:null},
+  {id:'ht3',proj:'trees',text:'✏️ Sketch ring installation design',desc:'Ring that fits around tree trunk. Material, sizing, attachment.',pri:'p1',due:null},
+  {id:'ht4',proj:'trees',text:'📦 Design connected box unit',desc:'Soil, water reservoir, roots. Dimensions and materials.',pri:'p1',due:null},
+  {id:'ht5',proj:'trees',text:'🌿 Identify covannazil plant',desc:'Hebrew name, botanical name, where to source. Is it edible? Does it climb?',pri:'p1',due:null},
+  {id:'ht6',proj:'trees',text:'🌱 Research growing conditions',desc:'Soil, water, sunlight, temperature. Trellis or self-climb?',pri:'p1',due:null},
+  {id:'ht7',proj:'trees',text:'🎨 Define brand identity',desc:'Hugs and Trees. Logo, colors, tone of voice.',pri:'p2',due:null},
+  {id:'ht8',proj:'trees',text:'📏 Define target tree types and trunk sizes',desc:'Species and diameter ranges → determines ring sizing.',pri:'p2',due:null},
+  // Personal
+  {id:'per1',proj:'personal',text:'🚨 MSK MyChart — בדוק התראת אבטחה',desc:'מכשיר נייד חדש חובר לחשבון. אם לא אתה — 646-227-2593.',pri:'p1',due:'2026-06-27'},
+  {id:'per2',proj:'personal',text:'💳 שלם חשבון אבן יהודה',desc:'שובר דיגיטלי מ-mast@outbox.co.il. OVERDUE.',pri:'p1',due:'2026-06-26',overdue:true},
+  {id:'per3',proj:'personal',text:'📋 פגישה עם דור אליאב — The Switch',desc:'שני בוקר, 29/6.',pri:'p2',due:'2026-06-29'},
+  {id:'per4',proj:'personal',text:'📨 Ayalon — חידוש פוליסת בריאות',desc:'בדוק הודעת חידוש מ-moked-briut@ayalon-ins.co.il.',pri:'p2',due:'2026-06-26',overdue:true},
+  {id:'per5',proj:'personal',text:'💳 AT&T — $124.36',desc:'חשבון חודשי. Due July 8. myAT&T.',pri:'p2',due:'2026-07-08'},
+  {id:'per6',proj:'personal',text:'🔐 OpenAI גישה לחשבון Google',desc:'בדוק myaccount.google.com → Security → Third-party apps.',pri:'p2',due:'2026-06-21',overdue:true},
+  {id:'per7',proj:'personal',text:'📄 מכתב סיום עבודה אגם לידרים (Fiverr)',desc:'מ-orli.yakobov@agamin.co.il. בדוק אם נדרשת פעולה.',pri:'p2',due:'2026-06-24',overdue:true},
+];
 
-  // Load radar data
-  function loadRadarData() {
-    try {
-      const raw = document.getElementById('radar-data').textContent;
-      const data = JSON.parse(raw);
+const PROJECTS = {
+  nlp:     {name:'NLP — הדס וילף',       color:'#9b59b6'},
+  amazon:  {name:'Austaras — Amazon FBA', color:'#e67e22'},
+  invest:  {name:'השקעות — Meitav',       color:'#27ae60'},
+  trees:   {name:'Hugs and Trees 🌳',     color:'#16a085'},
+  personal:{name:'אישי / כללי',          color:'#2980b9'},
+};
 
-      if (data.updated) {
-        const d = new Date(data.updated);
-        document.getElementById('last-updated-display').textContent =
-          `עדכון אחרון: ${d.toLocaleString('he-IL')}`;
-      } else {
-        document.getElementById('last-updated-display').textContent = 'ממתין לעדכון הבוקר הראשון';
-      }
+// ====== RENDER TASKS ======
+function renderTasks() {
+  const done = JSON.parse(sessionStorage.getItem('done')||'{}');
+  const container = document.getElementById('tasks-container');
+  const open = JSON.parse(sessionStorage.getItem('openProj')||'{}');
 
-      // Execute grid
-      const statusMap = {
-        buy: { label: '✅ קנה עכשיו', cls: 'buy' },
-        wait: { label: '⏳ המתן', cls: 'wait' },
-        above: { label: '⚠️ מעל יעד', cls: 'above' },
-        check: { label: '🔍 בדוק', cls: 'check' }
-      };
+  // Group by project
+  const grouped = {};
+  TASKS.forEach(t => {
+    if (!grouped[t.proj]) grouped[t.proj] = [];
+    grouped[t.proj].push(t);
+  });
 
-      const grid = document.getElementById('execute-grid');
-      grid.innerHTML = data.executeToday.map(item => {
-        const s = statusMap[item.status] || statusMap.check;
-        return `<div class="execute-item">
-          <div class="ticker">${item.ticker}</div>
-          <div class="price">${item.price ? '$' + item.price : '—'}</div>
-          <div class="target">${item.target}</div>
-          <span class="status-badge ${s.cls}">${s.label}</span>
-        </div>`;
-      }).join('');
+  const projOrder = ['nlp','amazon','invest','trees','personal'];
+  let html = '';
 
-      // Action cards
-      const container = document.getElementById('action-cards-container');
-      if (data.actionCards && data.actionCards.length > 0) {
-        container.innerHTML = data.actionCards.map(card => `
-          <div class="action-card">
-            <div class="action-header">
-              <div class="action-ticker">${card.ticker} <span style="font-size:13px;color:var(--muted);font-weight:400">${card.name}</span></div>
-              <div class="action-score">${card.score}/100</div>
-            </div>
-            <div class="action-thesis">${card.thesis}</div>
-            <div class="action-row">
-              <span class="action-label">פעולה:</span>
-              <span style="color:var(--green);font-weight:600">${card.action}</span>
-            </div>
+  projOrder.forEach(projKey => {
+    const tasks = grouped[projKey] || [];
+    if (!tasks.length) return;
+    const proj = PROJECTS[projKey];
+    const isOpen = open[projKey] !== false; // default open
+    const doneCount = tasks.filter(t => done[t.id]).length;
+    const p1Count = tasks.filter(t => t.pri === 'p1' && !done[t.id]).length;
+
+    html += `<div class="proj-group ${isOpen?'open':''}" id="pg-${projKey}">
+      <div class="proj-header" onclick="toggleProj('${projKey}')">
+        <div class="proj-dot" style="background:${proj.color}"></div>
+        <div class="proj-name">${proj.name}</div>
+        ${p1Count > 0 ? `<span class="sbadge s-above" style="font-size:10px">${p1Count} P1</span>` : ''}
+        <div class="proj-count">${doneCount}/${tasks.length}</div>
+        <div class="proj-chevron">›</div>
+      </div>
+      <div class="proj-tasks">`;
+
+    tasks.forEach(t => {
+      const isDone = !!done[t.id];
+      const overdue = t.overdue && !isDone;
+      html += `<div class="task-item ${isDone?'done':''}" onclick="toggleTask('${t.id}')">
+        <div class="task-cb">${isDone?'✓':''}</div>
+        <div class="task-body">
+          <div class="task-text">${t.text}</div>
+          ${t.desc ? `<div class="task-desc">${t.desc}</div>` : ''}
+          <div class="task-meta">
+            <span class="task-tag ${t.pri}">${t.pri.toUpperCase()}</span>
+            ${t.due ? `<span class="task-tag ${overdue?'overdue':''}">${overdue?'⚠️ OVERDUE: ':''}${t.due}</span>` : ''}
           </div>
-        `).join('');
-      }
+        </div>
+      </div>`;
+    });
 
-      // Watchlist
-      if (data.watchlist && data.watchlist.length > 0) {
-        document.getElementById('watchlist-container').innerHTML = data.watchlist.map(w => `
-          <div class="watch-item">
-            <div>
-              <div class="watch-ticker">${w.ticker}</div>
-              <div class="watch-note">${w.note || ''}</div>
-            </div>
-            <div class="watch-alert">${w.alert || ''}</div>
-          </div>
-        `).join('');
-      }
+    html += `</div></div>`;
+  });
 
-      // Summary
-      if (data.summary) {
-        document.getElementById('summary-text').textContent = data.summary;
-      }
+  container.innerHTML = html;
+}
 
-    } catch(e) {
-      console.error('Error loading radar data:', e);
+function toggleProj(key) {
+  const el = document.getElementById('pg-'+key);
+  el.classList.toggle('open');
+  const open = JSON.parse(sessionStorage.getItem('openProj')||'{}');
+  open[key] = el.classList.contains('open');
+  sessionStorage.setItem('openProj', JSON.stringify(open));
+}
+
+function toggleTask(id) {
+  const done = JSON.parse(sessionStorage.getItem('done')||'{}');
+  done[id] = !done[id];
+  sessionStorage.setItem('done', JSON.stringify(done));
+  renderTasks();
+}
+
+// ====== APPROVALS ======
+function renderApprovals() {
+  try {
+    const data = JSON.parse(document.getElementById('radar-data').textContent);
+    const aps = data.approvals || [];
+    const dismissed = JSON.parse(sessionStorage.getItem('dismissed-ap')||'[]');
+    const pending = aps.filter(a => !dismissed.includes(a.id));
+    document.getElementById('ap-count').textContent = pending.length;
+
+    const container = document.getElementById('approvals-container');
+    if (!pending.length) {
+      container.innerHTML = '<div class="empty">אין פריטים הממתינים לאישורך</div>';
+      return;
     }
-  }
+    container.innerHTML = pending.map(a => `
+      <div class="ap-item" id="ap-${a.id}">
+        <div class="ap-header">
+          <div class="ap-title">${a.title}</div>
+          <div class="ap-tag">${a.category}</div>
+        </div>
+        <div class="ap-desc">${a.description}</div>
+        <div class="ap-actions">
+          <button class="btn-approve" onclick="approveItem('${a.id}')">✅ אשר</button>
+          <button class="btn-reject" onclick="dismissItem('${a.id}')">✗ דחה</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {}
+}
 
-  loadRadarData();
+function approveItem(id) {
+  const el = document.getElementById('ap-'+id);
+  el.style.borderColor = 'var(--green)';
+  el.innerHTML = `<div style="text-align:center;padding:10px;color:var(--green);font-weight:600">✅ אושר — מועבר לביצוע</div>`;
+  setTimeout(()=>dismissItem(id), 1500);
+}
+function dismissItem(id) {
+  const dismissed = JSON.parse(sessionStorage.getItem('dismissed-ap')||'[]');
+  dismissed.push(id);
+  sessionStorage.setItem('dismissed-ap', JSON.stringify(dismissed));
+  renderApprovals();
+}
 
-  // Tab switching
-  function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    const tabs = document.querySelectorAll('.tab');
-    const sectionMap = { invest: 0, tasks: 1, amazon: 2, portfolio: 3 };
-    tabs[sectionMap[id]].classList.add('active');
-  }
+// ====== CHARTS ======
+function initCharts() {
+  // Sector pie
+  const sectorData = {
+    labels:['AI → חשמל (OPC+Doral+Enlight)','שוק הון ישראלי (IBI)','חלל (SPCX)','ביוטק (MRNA)','צריכה (Max)','תוכנה (Elad)','מזומן'],
+    values:[2671,1960,560,361,376,225,10655],
+    colors:['#e67e22','#2980b9','#8e44ad','#e74c3c','#f39c12','#16a085','#7f8c8d']
+  };
+  const mktData = {
+    labels:['תל אביב (TASE)','ארה״ב (NASDAQ/NYSE)','מזומן'],
+    values:[4746+1960+376+225+512+486,560+361,10655],
+    colors:['#3498db','#2ecc71','#95a5a6']
+  };
 
-  function setNav(el) {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
-  }
-
-  // Task toggle
-  function toggleTask(el) {
-    el.classList.toggle('done');
-    const cb = el.querySelector('.task-checkbox');
-    cb.innerHTML = el.classList.contains('done') ? '✓' : '';
-    saveTaskState();
-  }
-
-  // Persist task state in sessionStorage (resets on page close — intentional)
-  function saveTaskState() {
-    const states = {};
-    document.querySelectorAll('.task-item').forEach((el, i) => {
-      states[i] = el.classList.contains('done');
+  function makePie(canvasId, legendId, data) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    new Chart(ctx, {
+      type:'doughnut',
+      data:{labels:data.labels, datasets:[{data:data.values, backgroundColor:data.colors, borderWidth:1, borderColor:'#0d0d12'}]},
+      options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:function(c){const total=c.dataset.data.reduce((a,b)=>a+b,0);return c.label+': '+(c.raw/total*100).toFixed(1)+'%';}}}}},
     });
-    sessionStorage.setItem('task-states', JSON.stringify(states));
+    document.getElementById(legendId).innerHTML = data.labels.map((l,i)=>
+      `<div class="legend-item"><div class="legend-dot" style="background:${data.colors[i]}"></div>${l}</div>`
+    ).join('');
   }
 
-  function restoreTaskState() {
-    const saved = sessionStorage.getItem('task-states');
-    if (!saved) return;
-    const states = JSON.parse(saved);
-    document.querySelectorAll('.task-item').forEach((el, i) => {
-      if (states[i]) {
-        el.classList.add('done');
-        el.querySelector('.task-checkbox').innerHTML = '✓';
-      }
-    });
-  }
+  makePie('sectorChart','sectorLegend',sectorData);
+  makePie('marketChart','marketLegend',mktData);
+}
 
-  restoreTaskState();
+// ====== NAV ======
+function nav(sectionId, tabIdx) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+  document.querySelectorAll('.tab')[tabIdx].classList.add('active');
+  document.querySelectorAll('.bnav-item')[tabIdx].classList.add('active');
+
+  if (sectionId === 'invest') setTimeout(initCharts, 50);
+}
+
+// ====== INIT ======
+const now = new Date();
+const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+document.getElementById('dateDisplay').textContent = `${days[now.getDay()]}, ${now.toLocaleDateString('he-IL')}`;
+
+try {
+  const data = JSON.parse(document.getElementById('radar-data').textContent);
+  if (data.updated) {
+    const d = new Date(data.updated);
+    document.getElementById('updatedDisplay').textContent = 'עדכון אחרון: '+d.toLocaleString('he-IL');
+    if (data.summary) document.getElementById('summary-text').textContent = data.summary;
+  }
+} catch(e) {}
+
+renderTasks();
+renderApprovals();
 </script>
-
 </body>
 </html>
