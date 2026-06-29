@@ -389,8 +389,7 @@ function showSetup() {
   document.getElementById('setupScreen').style.display = 'flex';
 }
 
-a
-ync function saveToken() {
+async function saveToken() {
   const token = document.getElementById('tokenInput').value.trim();
   if (!token) return;
   localStorage.setItem(TOKEN_KEY, token);
