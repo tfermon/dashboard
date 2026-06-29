@@ -177,11 +177,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div class="setup-screen" id="setupScreen" style="display:none">
   <div class="setup-card">
     <div class="setup-title">Tal's <span>Dashboard</span></div>
-    <div class="setup-sub">כדי לסנכרן משימות בזמן אמת, הכנס את מפתח ה-API של Todoist. הוא נשמר מקומית בדפדפן בלבד — לא מועלה לשום שרת.</div>
+    <div class="setup-sub">◊õ◊ì◊ô ◊ú◊°◊†◊õ◊®◊ü ◊û◊©◊ô◊û◊ï◊™ ◊ë◊ñ◊û◊ü ◊ê◊û◊™, ◊î◊õ◊†◊° ◊ê◊™ ◊û◊§◊™◊ó ◊î-API ◊©◊ú Todoist. ◊î◊ï◊ê ◊†◊©◊û◊® ◊û◊ß◊ï◊û◊ô◊™ ◊ë◊ì◊§◊ì◊§◊ü ◊ë◊ú◊ë◊ì ‚Äî ◊ú◊ê ◊û◊ï◊¢◊ú◊î ◊ú◊©◊ï◊ù ◊©◊®◊™.</div>
     <input class="setup-input" type="password" id="tokenInput" placeholder="Todoist API token...">
-    <div class="setup-error" id="setupError">המפתח לא תקין — בדוק ונסה שוב</div>
-    <button class="setup-btn" onclick="saveToken()">התחבר</button>
-    <a class="setup-link" href="https://app.todoist.com/app/settings/integrations/developer" target="_blank">השג API token ← Todoist → Settings → Integrations → Developer</a>
+    <div class="setup-error" id="setupError">◊î◊û◊§◊™◊ó ◊ú◊ê ◊™◊ß◊ô◊ü ‚Äî ◊ë◊ì◊ï◊ß ◊ï◊†◊°◊î ◊©◊ï◊ë</div>
+    <button class="setup-btn" onclick="saveToken()">◊î◊™◊ó◊ë◊®</button>
+    <a class="setup-link" href="https://app.todoist.com/app/settings/integrations/developer" target="_blank">◊î◊©◊í API token ‚Üê Todoist ‚Üí Settings ‚Üí Integrations ‚Üí Developer</a>
   </div>
 </div>
 
@@ -191,104 +191,104 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="date-pill" id="dateDisplay"></div>
   </div>
   <div class="updated">
-    <span id="updatedDisplay">מסנכרן...</span>
-    <button class="sync-btn" id="syncBtn" onclick="syncNow()">↻ רענן</button>
+    <span id="updatedDisplay">◊û◊°◊†◊õ◊®◊ü...</span>
+    <button class="sync-btn" id="syncBtn" onclick="syncNow()">‚Üª ◊®◊¢◊†◊ü</button>
   </div>
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="nav('tasks',0)">✅ משימות</div>
-  <div class="tab" onclick="nav('bottleneck',1)">🚦 צוואר בקבוק</div>
-  <div class="tab" onclick="nav('approvals',2)">🎯 אישורים</div>
-  <div class="tab" onclick="nav('invest',3)">📈 השקעות</div>
-  <div class="tab" onclick="nav('portfolio',4)">💼 תיק</div>
-  <div class="tab" onclick="nav('settings',5)">⚙️</div>
+  <div class="tab active" onclick="nav('tasks',0)">‚úÖ ◊û◊©◊ô◊û◊ï◊™</div>
+  <div class="tab" onclick="nav('bottleneck',1)">üö¶ ◊¶◊ï◊ï◊ê◊® ◊ë◊ß◊ë◊ï◊ß</div>
+  <div class="tab" onclick="nav('approvals',2)">üéØ ◊ê◊ô◊©◊ï◊®◊ô◊ù</div>
+  <div class="tab" onclick="nav('invest',3)">üìà ◊î◊©◊ß◊¢◊ï◊™</div>
+  <div class="tab" onclick="nav('portfolio',4)">üíº ◊™◊ô◊ß</div>
+  <div class="tab" onclick="nav('settings',5)">‚öôÔ∏è</div>
 </div>
 
 <div class="content">
 
 <div id="tasks" class="section active">
-  <div id="tasks-container"><div class="loading"><div class="loading-spinner"></div>טוען משימות מ-Todoist...</div></div>
+  <div id="tasks-container"><div class="loading"><div class="loading-spinner"></div>◊ò◊ï◊¢◊ü ◊û◊©◊ô◊û◊ï◊™ ◊û-Todoist...</div></div>
 </div>
 
 <div id="bottleneck" class="section">
-  <div id="bottleneck-container"><div class="loading"><div class="loading-spinner"></div>טוען...</div></div>
+  <div id="bottleneck-container"><div class="loading"><div class="loading-spinner"></div>◊ò◊ï◊¢◊ü...</div></div>
 </div>
 
 <div id="approvals" class="section">
   <div class="card">
-    <div class="card-title">🎯 ממתין לאישורך <span class="count" id="ap-count">0</span></div>
+    <div class="card-title">üéØ ◊û◊û◊™◊ô◊ü ◊ú◊ê◊ô◊©◊ï◊®◊ö <span class="count" id="ap-count">0</span></div>
     <div id="approvals-container"></div>
   </div>
 </div>
 
 <div id="invest" class="section">
   <div class="card">
-    <div class="card-title">⚡ Execute Today?</div>
+    <div class="card-title">‚ö° Execute Today?</div>
     <div class="exec-grid" id="exec-grid"></div>
   </div>
   <div class="card">
-    <div class="card-title">🥧 פיזור לפי סקטור</div>
+    <div class="card-title">ü•ß ◊§◊ô◊ñ◊ï◊® ◊ú◊§◊ô ◊°◊ß◊ò◊ï◊®</div>
     <div class="chart-wrap"><canvas id="sectorChart"></canvas></div>
     <div class="legend" id="sectorLegend"></div>
   </div>
   <div class="card">
-    <div class="card-title">🌍 פיזור לפי שוק</div>
+    <div class="card-title">üåç ◊§◊ô◊ñ◊ï◊® ◊ú◊§◊ô ◊©◊ï◊ß</div>
     <div class="chart-wrap"><canvas id="marketChart"></canvas></div>
     <div class="legend" id="marketLegend"></div>
   </div>
   <div class="card">
-    <div class="card-title">💬 תקציר</div>
+    <div class="card-title">üí¨ ◊™◊ß◊¶◊ô◊®</div>
     <div class="summary-box"><p id="summary-text"></p></div>
   </div>
   <div class="card">
-    <div class="card-title">👁️ Watchlist</div>
-    <div class="watchlist-item"><div><div class="w-ticker">ETN</div><div class="w-note">Eaton — data center power</div></div><div class="w-alert">התראה: $390</div></div>
-    <div class="watchlist-item"><div><div class="w-ticker">GEV</div><div class="w-note">GE Vernova — grid infra</div></div><div class="w-alert">התראה: $1,000</div></div>
-    <div class="watchlist-item"><div><div class="w-ticker">VRT</div><div class="w-note">Vertiv</div></div><div class="w-alert">בדוק thesis מחדש</div></div>
+    <div class="card-title">üëÅÔ∏è Watchlist</div>
+    <div class="watchlist-item"><div><div class="w-ticker">ETN</div><div class="w-note">Eaton ‚Äî data center power</div></div><div class="w-alert">◊î◊™◊®◊ê◊î: $390</div></div>
+    <div class="watchlist-item"><div><div class="w-ticker">GEV</div><div class="w-note">GE Vernova ‚Äî grid infra</div></div><div class="w-alert">◊î◊™◊®◊ê◊î: $1,000</div></div>
+    <div class="watchlist-item"><div><div class="w-ticker">VRT</div><div class="w-note">Vertiv</div></div><div class="w-alert">◊ë◊ì◊ï◊ß thesis ◊û◊ó◊ì◊©</div></div>
   </div>
 </div>
 
 <div id="portfolio" class="section">
   <div class="card">
-    <div class="card-title">💵 מזומן פנוי</div>
-    <div class="cash-row"><span class="cash-label">סה״כ לפריסה</span><span class="cash-val big">₪10,655</span></div>
-    <div class="cash-row"><span class="cash-label">קיים במיטב</span><span class="cash-val">₪655</span></div>
-    <div class="cash-row"><span class="cash-label">הפקדה 25/06</span><span class="cash-val">₪10,000</span></div>
+    <div class="card-title">üíµ ◊û◊ñ◊ï◊û◊ü ◊§◊†◊ï◊ô</div>
+    <div class="cash-row"><span class="cash-label">◊°◊î◊¥◊õ ◊ú◊§◊®◊ô◊°◊î</span><span class="cash-val big">‚Ç™10,655</span></div>
+    <div class="cash-row"><span class="cash-label">◊ß◊ô◊ô◊ù ◊ë◊û◊ô◊ò◊ë</span><span class="cash-val">‚Ç™655</span></div>
+    <div class="cash-row"><span class="cash-label">◊î◊§◊ß◊ì◊î 25/06</span><span class="cash-val">‚Ç™10,000</span></div>
   </div>
   <div class="card">
-    <div class="card-title">📊 המלצת פריסה</div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">ETN</div><div class="hold-name">כניסה אם ≤$390</div></div><div class="hold-right"><div class="hold-val pos">₪1,400–2,800</div><div class="hold-note neu">1–2 מניות</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">GEV</div><div class="hold-name">כניסה אם ≤$1,000</div></div><div class="hold-right"><div class="hold-val pos">₪4,000–5,000</div><div class="hold-note neu">שמור רזרבה</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">הוספה</div></div><div class="hold-right"><div class="hold-val pos">₪570–1,140</div><div class="hold-note neu">1–2 מניות</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">CASH</div><div class="hold-name">רזרבה</div></div><div class="hold-right"><div class="hold-val neu">₪1,000–3,000</div></div></div>
+    <div class="card-title">üìä ◊î◊û◊ú◊¶◊™ ◊§◊®◊ô◊°◊î</div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">ETN</div><div class="hold-name">◊õ◊†◊ô◊°◊î ◊ê◊ù ‚â§$390</div></div><div class="hold-right"><div class="hold-val pos">‚Ç™1,400‚Äì2,800</div><div class="hold-note neu">1‚Äì2 ◊û◊†◊ô◊ï◊™</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">GEV</div><div class="hold-name">◊õ◊†◊ô◊°◊î ◊ê◊ù ‚â§$1,000</div></div><div class="hold-right"><div class="hold-val pos">‚Ç™4,000‚Äì5,000</div><div class="hold-note neu">◊©◊û◊ï◊® ◊®◊ñ◊®◊ë◊î</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">◊î◊ï◊°◊§◊î</div></div><div class="hold-right"><div class="hold-val pos">‚Ç™570‚Äì1,140</div><div class="hold-note neu">1‚Äì2 ◊û◊†◊ô◊ï◊™</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">CASH</div><div class="hold-name">◊®◊ñ◊®◊ë◊î</div></div><div class="hold-right"><div class="hold-val neu">‚Ç™1,000‚Äì3,000</div></div></div>
   </div>
   <div class="card">
-    <div class="card-title">📋 תיק נוכחי — Meitav</div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">IBI</div><div class="hold-name">IBI Investment House</div></div><div class="hold-right"><div class="hold-val">₪1,960</div><div class="hold-note pos">~19%</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">OPC</div><div class="hold-name">OPC Energy</div></div><div class="hold-right"><div class="hold-val">₪1,673</div><div class="hold-note pos">~16%</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">Space Economy ETF</div></div><div class="hold-right"><div class="hold-val">₪560</div><div class="hold-note neu">~5%</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Doral</div><div class="hold-name">Doral Energy</div></div><div class="hold-right"><div class="hold-val">₪512</div><div class="hold-note pos">~5%</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Enlight</div><div class="hold-name">Enlight Energy</div></div><div class="hold-right"><div class="hold-val">₪486</div><div class="hold-note pos">~5%</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Max</div><div class="hold-name">Max Stock</div></div><div class="hold-right"><div class="hold-val">₪376</div><div class="hold-note neu">~4%</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">MRNA</div><div class="hold-name">Moderna</div></div><div class="hold-right"><div class="hold-val">₪361</div><div class="hold-note neg">~3.5% · סיכון גבוה</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Elad</div><div class="hold-name">Elad Software</div></div><div class="hold-right"><div class="hold-val">₪225</div><div class="hold-note neu">~2%</div></div></div>
-    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">TSLA</div><div class="hold-name">Tesla (בהעברה)</div></div><div class="hold-right"><div class="hold-val">₪2,219</div><div class="hold-note neg">⚠️ ממתין להחלטה</div></div></div>
+    <div class="card-title">üìã ◊™◊ô◊ß ◊†◊ï◊õ◊ó◊ô ‚Äî Meitav</div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">IBI</div><div class="hold-name">IBI Investment House</div></div><div class="hold-right"><div class="hold-val">‚Ç™1,960</div><div class="hold-note pos">~19%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">OPC</div><div class="hold-name">OPC Energy</div></div><div class="hold-right"><div class="hold-val">‚Ç™1,673</div><div class="hold-note pos">~16%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">Space Economy ETF</div></div><div class="hold-right"><div class="hold-val">‚Ç™560</div><div class="hold-note neu">~5%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Doral</div><div class="hold-name">Doral Energy</div></div><div class="hold-right"><div class="hold-val">‚Ç™512</div><div class="hold-note pos">~5%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Enlight</div><div class="hold-name">Enlight Energy</div></div><div class="hold-right"><div class="hold-val">‚Ç™486</div><div class="hold-note pos">~5%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Max</div><div class="hold-name">Max Stock</div></div><div class="hold-right"><div class="hold-val">‚Ç™376</div><div class="hold-note neu">~4%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">MRNA</div><div class="hold-name">Moderna</div></div><div class="hold-right"><div class="hold-val">‚Ç™361</div><div class="hold-note neg">~3.5% ¬∑ ◊°◊ô◊õ◊ï◊ü ◊í◊ë◊ï◊î</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Elad</div><div class="hold-name">Elad Software</div></div><div class="hold-right"><div class="hold-val">‚Ç™225</div><div class="hold-note neu">~2%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">TSLA</div><div class="hold-name">Tesla (◊ë◊î◊¢◊ë◊®◊î)</div></div><div class="hold-right"><div class="hold-val">‚Ç™2,219</div><div class="hold-note neg">‚ö†Ô∏è ◊û◊û◊™◊ô◊ü ◊ú◊î◊ó◊ú◊ò◊î</div></div></div>
   </div>
 </div>
 
 <div id="settings" class="section">
   <div class="card">
-    <div class="card-title">⚙️ הגדרות</div>
+    <div class="card-title">‚öôÔ∏è ◊î◊í◊ì◊®◊ï◊™</div>
     <div class="settings-row">
-      <div><div class="settings-label">Todoist API Token</div><div class="settings-sub" id="tokenStatus">טוען...</div></div>
-      <button class="settings-btn danger" onclick="clearToken()">נתק</button>
+      <div><div class="settings-label">Todoist API Token</div><div class="settings-sub" id="tokenStatus">◊ò◊ï◊¢◊ü...</div></div>
+      <button class="settings-btn danger" onclick="clearToken()">◊†◊™◊ß</button>
     </div>
     <div class="settings-row">
-      <div><div class="settings-label">סנכרון</div><div class="settings-sub">כל פתיחת דף מסנכרת מ-Todoist בזמן אמת</div></div>
+      <div><div class="settings-label">◊°◊†◊õ◊®◊ï◊ü</div><div class="settings-sub">◊õ◊ú ◊§◊™◊ô◊ó◊™ ◊ì◊£ ◊û◊°◊†◊õ◊®◊™ ◊û-Todoist ◊ë◊ñ◊û◊ü ◊ê◊û◊™</div></div>
     </div>
     <div class="settings-row">
-      <div><div class="settings-label">השקעות</div><div class="settings-sub">מעודכן ע"י Trend to Trade task (radar-data JSON)</div></div>
+      <div><div class="settings-label">◊î◊©◊ß◊¢◊ï◊™</div><div class="settings-sub">◊û◊¢◊ï◊ì◊õ◊ü ◊¢"◊ô Trend to Trade task (radar-data JSON)</div></div>
     </div>
   </div>
 </div>
@@ -297,73 +297,386 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- BOTTOM NAV -->
 <div class="bnav">
-  <div class="bnav-item active" onclick="nav('tasks',0)"><div class="bnav-icon">✅</div><div>משימות</div></div>
-  <div class="bnav-item" onclick="nav('bottleneck',1)"><div class="bnav-icon">🚦</div><div>צוואר</div></div>
-  <div class="bnav-item" onclick="nav('approvals',2)"><div class="bnav-icon">🎯</div><div>אישורים</div></div>
-  <div class="bnav-item" onclick="nav('invest',3)"><div class="bnav-icon">📈</div><div>השקעות</div></div>
-  <div class="bnav-item" onclick="nav('portfolio',4)"><div class="bnav-icon">💼</div><div>תיק</div></div>
-  <div class="bnav-item" onclick="nav('settings',5)"><div class="bnav-icon">⚙️</div><div>הגדרות</div></div>
+  <div class="bnav-item active" onclick="nav('tasks',0)"><div class="bnav-icon">‚úÖ</div><div>◊û◊©◊ô◊û◊ï◊™</div></div>
+  <div class="bnav-item" onclick="nav('bottleneck',1)"><div class="bnav-icon">üö¶</div><div>◊¶◊ï◊ï◊ê◊®</div></div>
+  <div class="bnav-item" onclick="nav('approvals',2)"><div class="bnav-icon">üéØ</div><div>◊ê◊ô◊©◊ï◊®◊ô◊ù</div></div>
+  <div class="bnav-item" onclick="nav('invest',3)"><div class="bnav-icon">üìà</div><div>◊î◊©◊ß◊¢◊ï◊™</div></div>
+  <div class="bnav-item" onclick="nav('portfolio',4)"><div class="bnav-icon">üíº</div><div>◊™◊ô◊ß</div></div>
+  <div class="bnav-item" onclick="nav('settings',5)"><div class="bnav-icon">‚öôÔ∏è</div><div>◊î◊í◊ì◊®◊ï◊™</div></div>
 </div>
 
-<!-- RADAR DATA — updated by Trend to Trade scheduled task -->
+<!-- RADAR DATA ‚Äî updated by Trend to Trade scheduled task -->
 <script type="application/json" id="radar-data">
 {
-  "updated": "2026-06-27T18:00:00+03:00",
-  "summary": "₪10,655 זמין לפריסה. ETN ו-GEV מעל יעד ב-3–6%. שבת: בדוק TASE. ראשון: בדוק ETN אם ירד ל-$390.",
+  "updated": "2026-06-29T08:00:00+03:00",
+  "summary": "‚Ç™10,655 ◊ñ◊û◊ô◊ü ◊ú◊§◊®◊ô◊°◊î. ETN ◊ï-GEV ◊û◊¢◊ú ◊ô◊¢◊ì ◊ë-3‚Äì6%. TSLA: ◊î◊¢◊ë◊®◊î ◊û-Discount ‚Üí Meitav ◊™◊ï◊©◊ú◊ù ◊¢◊ì ◊û◊ó◊® (30/6). Prime Day ◊¢◊ë◊® ‚Äî ◊ú◊î◊°◊ô◊ò ◊§◊ï◊ß◊ï◊° ◊ú-A+ ◊ï-Brand Store.",
   "executeToday": [
-    {"ticker":"VRT","name":"Vertiv","price":304,"target":"<$130","status":"above","note":"stale thesis"},
-    {"ticker":"ETN","name":"Eaton","price":402,"target":"<$390","status":"wait","note":"3% מעל יעד"},
-    {"ticker":"SPCX","name":"SPCX ETF","price":153,"target":"current","status":"check","note":"בדוק כמות"},
-    {"ticker":"GEV","name":"GE Vernova","price":1057,"target":"<$1,000","status":"wait","note":"6% מעל יעד"}
+    {"ticker":"VRT","name":"Vertiv","price":304,"target":"<$130","status":"above","note":"stale thesis ‚Äî ◊©◊ß◊ï◊ú ◊û◊õ◊ô◊®◊î"},
+    {"ticker":"ETN","name":"Eaton","price":402,"target":"<$390","status":"wait","note":"3% ◊û◊¢◊ú ◊ô◊¢◊ì"},
+    {"ticker":"SPCX","name":"SPCX ETF","price":153,"target":"current","status":"check","note":"◊ë◊ì◊ï◊ß ◊õ◊û◊ï◊™"},
+    {"ticker":"GEV","name":"GE Vernova","price":1057,"target":"<$1,000","status":"wait","note":"6% ◊û◊¢◊ú ◊ô◊¢◊ì"}
   ],
   "approvals": [
     {
-      "id": "ap1",
-      "title": "Parent-Child Variation — Fish Hook Silver + Gold",
-      "category": "אמזון",
-      "description": "להפוך את B01MTJNYHE (Silver) ו-B01M6E4XJG (Gold) ל-parent-child variation. מאגד reviews לפני Prime Day, משפר visibility.",
-      "action": "פנייה ל-SC Seller Support לאיחוד ASIN"
-    },
-    {
       "id": "ap2",
-      "title": "הגדרת TSLA כתזה EV/AI בתיק",
-      "category": "השקעות",
-      "description": "TSLA לא ממופה לאף תזה קיימת. 2 מניות בהעברה מ-Discount → Meitav (פניה 199930559, due 30/6). מה עושים?",
+      "title": "TSLA ‚Äî ◊û◊î ◊ú◊¢◊©◊ï◊™ ◊¢◊ù ◊î◊û◊†◊ô◊ï◊™ ◊©◊û◊í◊ô◊¢◊ï◊™?",
+      "category": "◊î◊©◊ß◊¢◊ï◊™",
+      "description": "2 ◊û◊†◊ô◊ï◊™ TSLA ◊ë◊î◊¢◊ë◊®◊î ◊û-Discount ‚Üí Meitav (◊§◊†◊ô◊î 1999305559, due 30/6). Prime Day ◊¢◊ë◊® ‚Äî TSLA ◊ú◊ê ◊û◊û◊ï◊§◊î ◊ú◊™◊ñ◊î ◊ß◊ô◊ô◊û◊™ ◊ë◊™◊ô◊ß. ◊û◊î ◊¢◊ï◊©◊ô◊ù ◊ë◊ô◊ï◊ù ◊ß◊ë◊ú◊î?",
       "options": [
-        {"icon":"⏳","label":"המתן לקבלת המניות","note":"המתן עד 30/6, אז קבל החלטה אחרי Morning Radar","color":"opt-blue"},
-        {"icon":"💹","label":"מכור ופנה הון ל-ETN / GEV","note":"אם ETN ≤$390 ביום קבלה — מכור TSLA ותיכנס","color":"opt-green"},
-        {"icon":"🔵","label":"החזק כתזה EV + Autonomy","note":"רובוטיקה, אנרגיה, FSD — תזה ארוכת טווח","color":"opt-yellow"},
-        {"icon":"❌","label":"מכור הכל — לs^@�^{^�^C^g^t�^s^�^g^������є��^�^�^P�^C^��^S^S^W^|�^s^�^g^��^P�$�A�ݕȃ^S^�^g^g^t�������Ȉ艽�еɕ���(������t(�����(��t)�(�͍ɥ���((�͍ɥ���(���������
-=9%�������)����ЁQ=-9}-d��ѽ�����}���}ѽ�����)����ЁA$�􀝡����輽����ѽ����й����ɕ�н�Ȝ�)����ЁQ=d�􁹕܁�є���ѽ%M=M�ɥ���������Р�P��l�t�((���5���Q�����Ё�ɽ���Ё����̃�H���͡���ɐ��ɽ���)����ЁAI=)}5@��l(��쁭����l����������ɼ�t��������������������������ɽ��蝹���������������91@��P�^S^O^��^W^g^s^����������������蜌���؜���(��쁭����l����хɅ̜�����齸�������t���������������ɽ��蝅��齸������������хɅ̃�P���齸�	���������蜍��ݔ�Ȝ���(��쁭����l�^S^�^�^�^W^������ٕ�М�����х؜���ѽ��̝t�����ɽ��蝥�ٕ�М���������^S^�^�^�^W^���P�5��х؜��������������蜌�݅�������(��쁭����l��՝̜���ɕ�̜��^�^�^g^t�t�������������������ɽ����ɕ�̜����������!՝́����Qɕ�̃�~2̜������������蜌�ل��Ԝ���(��쁭����l����ͽ������^C^g^�^d���^o^s^s^d�������Ʌ��t������ɽ������ͽ�����������^C^g^�^d���^o^s^s^d�������������������蜌�����䜁��)t�)����ЁAI=)}=IH��l����������齸�����ٕ�М���ɕ�̜�����ͽ����t�()�չ�ѥ������Aɽ���С�ɽ�9������(��������ɽ�9�����ɕ��ɸ�쁝ɽ������ͽ�����������^C^g^�^d���^o^s^s^d��������蜌�����䜁��(������Ё��ݕȀ��ɽ�9����ѽ1�ݕ�
-�͔���(����Ȁ�����Ё�����AI=)}5@���(�������������̹ͽ����������ݕȹ����Ց�̡�����ɕ��ɸ���(���(�����U����ݸ��ɽ���Ѓ�P��͔���́�������ɕ�ѱ�(��ɕ��ɸ�쁝ɽ��耝�ɽ�|�����ɽ�9����ɕ�������q̬����|����������ɽ�9����������蜌�����䜁��)�()�չ�ѥ������Aɥ�ɥ������(�����Q����������ɝ��С�Ĥ����������Ȥ��������մ��̤����������Ф(��ɕ��ɸ�l��М���̜���Ȝ���ĝum�����t������М�)�((���������A$�������)��幌��չ�ѥ�������С��Ѡ���(������Ёѽ����􁱽���MѽɅ������%ѕ��Q=-9}-d��(������ЁȀ�݅�Ё��э��A$�����Ѡ���(������������쀝�ѡ�ɥ�ѥ���耝	��ɕȀ����ѽ�����(�����(�������ȹ����쁍���Ё��􁹕܁�ɽȠ�A$�����ȹ�х��̤쁔��х��̀�ȹ�х����ѡɽ܁���(��ɕ��ɸ�ȹ�ͽ����)�()��幌��չ�ѥ������A��С��Ѡ���(������Ёѽ����􁱽���MѽɅ������%ѕ��Q=-9}-d��(������ЁȀ�݅�Ё��э��A$�����Ѡ���(������ѡ��耝A=MP��(������������쀝�ѡ�ɥ�ѥ���耝	��ɕȀ����ѽ�����(�����(�������ȹ����쁍���Ё��􁹕܁�ɽȠ�A$�����ȹ�х��̤쁔��х��̀�ȹ�х����ѡɽ܁���(��ɕ��ɸ���Ք�)�((���������MQU@�������)�չ�ѥ���͡��M��������(�����յ��й���������	�%���͕���M�ɕ�������屔��������􀝙�����)�()��幌��չ�ѥ���ٕͅQ��������(������Ёѽ����􁑽�յ��й���������	�%���ѽ���%���М��م�Ք��ɥ����(�������ѽ�����ɕ��ɸ�(�������MѽɅ���͕�%ѕ��Q=-9}-d��ѽ�����(������(�����݅�Ё����Р���ɽ����̜��(�������յ��й���������	�%���͕���M�ɕ�������屔��������􀝹�����(���������͡���ɐ���(��􁍅э������(���������MѽɅ���ɕ��ٕ%ѕ��Q=-9}-d��(�������յ��й���������	�%���͕����ɽȜ����屔��������􀝉������(���)�()�չ�ѥ��������Q��������(�����������ɴ��^s^�^�^��^C^��Q�����Ѓ^W^s^_^[^W^��^s^{^�^h�^S^S^�^_^G^�^W^�������(���������MѽɅ���ɕ��ٕ%ѕ��Q=-9}-d��(��������ѥ���ɕ�������(���)�((���������1=�������)��幌��չ�ѥ��������͡���ɐ����(������Ёѽ����􁱽���MѽɅ������%ѕ��Q=-9}-d��(�������ѽ������͡��M�������ɕ��ɸ��((������Ё�Ѹ�􁑽�յ��й���������	�%����幍	Ѹ���(���Ѹ���ͅ��������Ք쁉Ѹ�ѕ��
-��ѕ�Ѐ􀟊츸���(�����յ��й���������	�%�������ѕ������䜤�ѕ��
-��ѕ�Ѐ�^{^�^�^o^�^|�^�^t�Q�����и����((������(��������Ёmх̰ͭ��ɽ�����t��݅�ЁAɽ��͔�����l(����������Р��х̜ͭ��(����������Р���ɽ����̜�(����t��((��������Ё�ɽ�	�%������(�����ɽ����̹��������������ɽ�	�%�m����t������������((����ɕ����Q�̡ͭх̰ͭ��ɽ�	�%���(����ɕ����	��ѱ������х̰ͭ��ɽ�	�%���((��������ЁЀ􁱽���MѽɅ������%ѕ��Q=-9}-d��(�������յ��й���������	�%���ѽ���Mх��̜��ѕ��
-��ѕ�Ѐ�(�����������������������йͱ�����Ф�����
-܃^{^_^W^G^���((�������յ��й���������	�%�������ѕ������䜤�ѕ��
-��ѕ�Ѐ�(�������^�^W^�^o^�^|耜�����܁�є���ѽ1�����Q���M�ɥ�������%0���쁡����ȵ����М������є�ȵ����М����(��􁍅э������(�����������х��̀�����ā������х��̀�����̤��(�����������MѽɅ���ɕ��ٕ%ѕ��Q=-9}-d��͡��M�������(����􁕱͔��(���������յ��й���������	�%�������ѕ������䜤�ѕ��
-��ѕ�Ѐ􀟊j���<�^�^K^g^C^P耜��������ͅ���(�����(��􁙥������(�����Ѹ���ͅ�����􁙅�͔쁉Ѹ�ѕ��
-��ѕ�Ѐ􀟊�^�^�^�^|��(���)�()�չ�ѥ����幍9�ܠ��쁱����͡���ɐ����((���������I9H�QM-L�������)�չ�ѥ���ɕ����Q�̡ͭх̰ͭ��ɽ�	�%����(������Ё���х���Ȁ􁑽�յ��й���������	�%���х̵ͭ���х���Ȝ��(������Ё�ɽ��̀����((��х̹ͭ�������Ѐ����(��������Ё�������􁵅�Aɽ���С�ɽ�	�%�mй�ɽ����}��t��������(��������Ё���􁵅������ɽ���(����������ɽ���m���t���ɽ���m���t��쁵�ф聵�������хͭ��mt���(�����ɽ���m���t�х̹ͭ��͠�Ф�(�����((������Ё���̀�=����й���̡�ɽ��̤�ͽ�Р�����������(��������Ё����AI=)}=IH������=����������AI=)}=IH������=�����(��������������������������ɕ��ɸ���������
-����ɔ����(����������������ɕ��ɸ��쁥�����������ɕ��ɸ����(����ɕ��ɸ���������(�����((����������̹����Ѡ���(�������х���ȹ�����!Q50���؁�����􉕵����^C^g^|�^{^�^g^{^W^��^�^�^W^_^W^���~:$𽑥����(����ɕ��ɸ�(���((����Ё�ѵ��􀜜�(�����̹��������������(��������Ё쁵�ф��хͭ�聝Ё��ɽ���m���t�(�����йͽ�Р�����������(�������������ɥ�ɥ�䀄�􁈹�ɥ�ɥ�䤁ɕ��ɸ����ɥ�ɥ�䀴����ɥ�ɥ���(����������Ё���􁄹�Ք������Ք���є�耜���䜰����􁈹�Ք������Ք���є�耜�����(������ɕ��ɸ����������
-����ɔ�����(�������(��������Ё�Ō��й���ѕȡЀ���й�ɥ�ɥ�����Ф�����Ѡ�(�����ѵ�����؁�������ɽ���ɽ����������������������(�������؁�������ɽ�������Ȉ���������ѽ����Aɽ�������������(���������؁�������ɽ����Ј���屔􉉅���ɽչ�����ф��������𽑥��(���������؁�������ɽ����������͌���ф�������𽑥��(�����������Ō����������������͉�����̵���ٔ����屔􉙽�еͥ�����������ō�@���������耜��(���������؁�������ɽ����չЈ���й����ѡ�𽑥��(���������؁�������ɽ������ɽ�����𽑥��(������𽑥��(�������؁�������ɽ��хͭ̈���((�����й�������Ѐ����(����������Ё�ɤ�􁵅�Aɥ�ɥ��й�ɥ�ɥ���(����������Ё�Ք��й�Ք���й�Ք���є�聹ձ��(����������Ё����Ք�����Ք���Q=d�(�������ѵ�����؁������хͬ��ѕ������Ѥ���й����(�����������ѽ��������хͬ���������������􉍽����ѕQ�ͬ����й�����ѡ�̤��ѥѱ��^�^{^|�^o^S^W^�^s^t�����ѽ��(���������؁������хͬ������(�����������؁������хͬ�ѕ�Ј���͌�й���ѕ�Х�𽑥��(������������й��͍ɥ�ѥ�������؁������хͬ���͌����͌�й��͍ɥ�ѥ����𽑥����耜��(�����������؁������хͬ���ф��(������������������������хͬ�х�����ɥ�����ɤ�ѽU����
-�͔���������(��������������Ք����������������хͬ�х�����������ٕɑՔ��耝х���Ք������������j���<�=YIU�
-܀��耜����Օ���������耜��(����������𽑥��(��������𽑥��(������𽑥����(�������((�����ѵ����𽑥��𽑥����(�����(�����х���ȹ�����!Q50��ѵ��)�((���������I9H�	=QQ19
-,�������)�չ�ѥ���ɕ����	��ѱ������х̰ͭ��ɽ�	�%����(������Ё�Ā�хͭ�(��������ѕȡЀ���й�ɥ�ɥ�����Ф(�����ͽ�Р�����������(����������Ё���􁄹�Ք������Ք���є�耜���䜰����􁈹�Ք������Ք���є�耜�����(������ɕ��ɸ����������
-����ɔ�����(�������ͱ���������((������Ё��􁑽�յ��й���������	�%������ѱ���������х���Ȝ��(��������Ĺ����Ѡ��쁌������!Q50���؁�����􉍅ɐ���؁�����􉕵����^C^g^|�@ă^�^�^W^_^g^t��~:$𽑥��𽑥����ɕ��ɸ��((����Ё�ѵ����؁�����􉍅ɐ���؁�����􉍅ɐ�ѥѱ����~j��@ă�P�^O^_^W^��^G^g^W^�^�𽑥����(���Ĺ�������Ѐ����(��������Ё�ɽ����ɽ�	�%�mй�ɽ����}��t�������(��������Ё�Ք��й�Ք���й�Ք���є�聹ձ��(��������Ё����Ք�����Ք���Q=d�(�����ѵ�����؁�����􉉸��ѕ���(�������؁�����􉉸��������j�𽑥��(�������؁�����􉉸������(���������؁�����􉉸�ѥѱ�����͌�й���ѕ�Х�𽑥��(���������؁�����􉉸���͌����͌��ɽ�����Ք�����
-܀������������j���<�=YIU�
-܀��耜������Ք�耜��𽑥��(������𽑥��(����𽑥����(�����(���ѵ����𽑥����(���������!Q50��ѵ��)�((���������
-=5A1Q�QM,�������)��幌��չ�ѥ���������ѕQ�ͬ������Ѹ���(���Ѹ������1��й�����������ѥ�����(���Ѹ�ѕ��
-��ѕ�Ѐ􀟊rL��(���Ѹ���ͅ��������Ք�(������(�����݅�Ё���A��Р��х̼ͭ��������������͔���(��������Ё���􁑽�յ��й���������	�%���Ѥ���������(�������������(�����������屔��Ʌ�ͥѥ���􀝽�����䀸��̰������Ѐ��̀��̰�����������̀��̜�(�����������屔��ٕə��܀􀝡�������(�����������屔������������(����������Ё��􁕰����͕�!������(�����������屔������Ѐ􁠀�������(������͕�Q�����Р������쁕����屔������Ѐ���쁕����屔��������������������(������͕�Q�����Р���������ɕ��ٔ���������(�����(��􁍅э������(�����Ѹ������1��йɕ��ٔ��������ѥ�����(�����Ѹ�ѕ��
-��ѕ�Ѐ􀜜�(�����Ѹ���ͅ�����􁙅�͔�(��������Р�^�^K^g^C^P�^G^�^K^g^�^��^S^{^�^g^{^P耜��������ͅ����(���)�()�չ�ѥ���ѽ����Aɽ�����쁑��յ��й���������	�%�����������������1��йѽ��������������((���������AAI=Y1L�������)�չ�ѥ���ɕ������ɽم�̠���(������(��������Ё��ф��)M=8����͔����յ��й���������	�%���Ʌ��ȵ��ф���ѕ��
-��ѕ�Ф�(��������Ё��̀􁑅ф����ɽم�́���mt�(�������յ��й���������	�%��������չМ��ѕ��
-��ѕ�Ѐ��̹����Ѡ�(��������Ё��􁑽�յ��й���������	�%������ɽم�̵���х���Ȝ��(�����������̹����Ѡ��쁌������!Q50���؁�����􉕵����^C^g^|�^�^�^g^c^g^t�^�^�^W^_^g^t𽑥����ɕ��ɸ��(�����������!Q50���̹����������(����������Ё���̀􁄹��ѥ��̀����؁����������ѥ��̈��턹��ѥ��̹��������(����������؁����������ѥ����������������(�����������؁����������ѥ������������������𽑥��(�����������؁����������ѥ���������؁����������ѥ������������͌����������𽑥���؁����������ѥ�����є����͌�����є��𽑥��𽑥��(��������𽑥��������������𽑥����耜��(������ɕ��ɸ���؁���������ѕ���(���������؁�������������Ȉ��؁��������ѥѱ�����͌���ѥѱ���𽑥���؁��������х�����͌�����ѕ�����𽑥��𽑥��(���������؁����������͌����͌�����͍ɥ�ѥ����𽑥��(���������������(���������؁����������є���~N,�^�^�^g^`�^[^P�^{^W^�^H�^s^�^g^W^|��P�^G^g^�^W^��^g^O^�^d�^�^O^�^�𽑥��(������𽑥����(����������������(��􁍅э�������)�((���������%9YMP�������)�չ�ѥ���ɕ����%�ٕ�Р���(������(��������Ё���)M=8����͔����յ��й���������	�%���Ʌ��ȵ��ф���ѕ��
-��ѕ�Ф�(�����������յ���䤁���յ��й���������	�%����յ����ѕ�М��ѕ��
-��ѕ�Ѐ􁐹�յ�����(��������Ёʹ��텉�ٔ�̵���ٔ��݅���̵݅�М�������̵�����������̵�����(�����������ᕍ�ѕQ���䤁�(���������յ��й���������	�%����ᕌ��ɥ���������!Q50�􁐹�ᕍ�ѕQ���乵�������(����������؁������ᕌ��ѕ���(�����������؁������ᕌ�ѥ���Ȉ��픹ѥ�����𽑥��(�����������؁������ᕌ��������픹�����𽑥��(�����������؁������ᕌ��ɥ�������픹�ɥ���𽑥��(�����������؁������ᕌ�хɝ�Ј�^g^�^L耑픹хɝ���𽑥��(����������������������͉�������͵m���х���u��̵���������픹��ѕ�������(��������𽑥��������������(�����(��􁍅э�������)�()��Ё������	ե�Ѐ􁙅�͔�)�չ�ѥ�������
-����̠���(������������	ե�Ф�ɕ��ɸ쁍�����	ե�Ѐ���Ք�(������Ё̀��(�����������l�$��H�^_^�^{^p���^�^W^��^S^W^|�^g^�^�^C^s^d���^_^s^p���^G^g^W^c^����^�^�^g^o^P���^�^W^o^�^P���^{^[^W^{^|�t�(����م�Օ��l���İ�����������İ��ذ��԰�����t�(�����������l����ݔ�Ȝ��������䜰����х�������ь͌��������Ȝ����ل��Ԝ���ݘ�ᐝt(����(������Ё����(�����������l�^�^p�^C^G^g^D���^C^�^S^�^D���^{^[^W^{^|�t�(����م�Օ��l������İ�����t�(�����������l�����ᑈ����ɕ���Ĝ����ՄՄ؝t(����(��ml�͕�ѽ�
-���М��͕�ѽ�1��������t�l���ɭ��
-���М����ɭ��1��������ut���������m���������t������(������܁
-���С���յ��й���������	�%����������
-��ѕ�Р�ɐ�����(����������蝑�՝���М�(��������ф��������鐹�����̱��х͕���m푅ф鐹م�Օ̱�����ɽչ�
-����鐹�����̱��ɑ��]��Ѡ�ı��ɑ��
-����蜌�����ȝ�u��(��������ѥ�����ɕ����ͥٔ���Ք�����х�������I�ѥ�际�͔���՝������������푥�����际�͕��ѽ��ѥ��퍅�����������������퍽��Ё������х͕й��ф�ɕ�Ս����������������ɕ��ɸ����������耜����ɅܽШ�����ѽ�ᕐ�Ĥ�����������(�������(�������յ��й���������	�%������������!Q50�􁐹�����̹�����������(��������؁�����􉱕������ѕ����؁�����􉱕�������Ј���屔􉉅���ɽչ��퐹������m�u��𽑥������𽑥��������������(�����)�((���������9X�������)�չ�ѥ�����ء������ँ�(�����յ��й�Օ��M����ѽ������͕�ѥ���������������̹�����1��йɕ��ٔ����ѥٔ����(�����յ��й�Օ��M����ѽ������х������ص�ѕ��������������й�����1��йɕ��ٔ����ѥٔ����(�����յ��й���������	�%�����������1��й�������ѥٔ���(�����յ��й�Օ��M����ѽ������х���m���t������1��й�������ѥٔ���(�����յ��й�Օ��M����ѽ���������ص�ѕ���m���t������1��й�������ѥٔ���(�����������􀝥�ٕ�М��͕�Q�����С����
-����̰�����)�((���������UQ%1L�������)�չ�ѥ����͌�̤��(�������̤�ɕ��ɸ����(��ɕ��ɸ�M�ɥ���̤�ɕ����������������윤�ɕ�������𽜰����윤�ɕ���������������윤�ɕ��������������ս�윤�)�((���������%9%P�������)����Ё}��܀􁹕܁�є���)����Ё}���̀�l�^�^C^�^W^|���^�^�^d���^�^s^g^�^d���^�^G^g^�^d���^_^{^g^�^d���^�^g^�^d���^�^G^��t�)���յ��й���������	�%�����ѕ�����䜤�ѕ��
-��ѕ�Ѐ�(��}����m}��ܹ����䠥t����������}��ܹѽ1������ѕM�ɥ�������%0���()ɕ������ɽم�̠��)ɕ����%�ٕ�Р��)�����͡���ɐ���(�͍ɥ���(𽉽���(�ѵ��
+        {"icon":"‚è≥","label":"◊î◊û◊™◊ü ◊ï◊î◊ó◊ú◊ò ◊ú◊ê◊ó◊® ◊ß◊ë◊ú◊î","note":"◊ß◊ë◊ú Morning Radar ◊ë◊ô◊ï◊ù ◊ß◊ë◊ú◊î ◊ú◊§◊†◊ô ◊î◊ó◊ú◊ò◊î","color":"opt-blue"},
+        {"icon":"üíπ","label":"◊û◊õ◊ï◊® ◊ï◊§◊†◊î ◊ú-ETN / GEV","note":"◊ê◊ù ETN ‚â§$390 ‚Äî ◊û◊õ◊ï◊® TSLA ◊ï◊™◊ô◊õ◊†◊°","color":"opt-green"},
+        {"icon":"üîµ","label":"◊î◊ó◊ñ◊ß ◊õ◊™◊ñ◊î EV + Autonomy","note":"◊®◊ï◊ë◊ï◊ò◊ô◊ß◊î, ◊ê◊†◊®◊í◊ô◊î, FSD ‚Äî ◊™◊ñ◊î ◊ê◊®◊ï◊õ◊™ ◊ò◊ï◊ï◊ó","color":"opt-yellow"},
+        {"icon":"‚ùå","label":"◊û◊õ◊ï◊® ◊î◊õ◊ú ‚Äî ◊ú◊ê ◊û◊™◊ê◊ô◊ù ◊ú◊™◊ô◊ß","note":"◊§◊†◊î ◊ê◊™ ◊î◊î◊ï◊ü ◊ú◊™◊ô◊ß ◊î-AI Power ◊î◊ß◊ô◊ô◊ù","color":"opt-red"}
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+// ====== CONFIG ======
+const TOKEN_KEY = 'todoist_api_token';
+const API = 'https://api.todoist.com/rest/v2';
+const TODAY = new Date().toISOString().split('T')[0];
+
+// Map Todoist project names ‚Üí dashboard groups
+const PROJ_MAP = [
+  { keys: ['nlp','neuro'],                        group:'nlp',      name:'NLP ‚Äî ◊î◊ì◊° ◊ï◊ô◊ú◊£',        color:'#9b59b6' },
+  { keys: ['austaras','amazon','fba'],             group:'amazon',   name:'Austaras ‚Äî Amazon FBA',  color:'#e67e22' },
+  { keys: ['◊î◊©◊ß◊¢◊ï◊™','invest','meitav','stocks'],   group:'invest',   name:'◊î◊©◊ß◊¢◊ï◊™ ‚Äî Meitav',        color:'#27ae60' },
+  { keys: ['hugs','trees','◊¢◊¶◊ô◊ù'],                 group:'trees',    name:'Hugs and Trees üå≥',      color:'#16a085' },
+  { keys: ['personal','◊ê◊ô◊©◊ô','◊õ◊ú◊ú◊ô','general'],    group:'personal', name:'◊ê◊ô◊©◊ô / ◊õ◊ú◊ú◊ô',            color:'#2980b9' },
+];
+const PROJ_ORDER = ['nlp','amazon','invest','trees','personal'];
+
+function mapProject(projName) {
+  if (!projName) return { group:'personal', name:'◊ê◊ô◊©◊ô / ◊õ◊ú◊ú◊ô', color:'#2980b9' };
+  const lower = projName.toLowerCase();
+  for (const m of PROJ_MAP) {
+    if (m.keys.some(k => lower.includes(k))) return m;
+  }
+  // Unknown project ‚Äî use its name directly
+  return { group: 'proj_' + projName.replace(/\s+/g,'_'), name: projName, color:'#2980b9' };
+}
+
+function mapPriority(p) {
+  // Todoist: 4=urgent(p1), 3=high(p2), 2=medium(p3), 1=none(p4)
+  return ['p4','p3','p2','p1'][p - 1] || 'p4';
+}
+
+// ====== API ======
+async function apiGet(path) {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const r = await fetch(API + path, {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (!r.ok) { const e = new Error('API ' + r.status); e.status = r.status; throw e; }
+  return r.json();
+}
+
+async function apiPost(path) {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const r = await fetch(API + path, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (!r.ok) { const e = new Error('API ' + r.status); e.status = r.status; throw e; }
+  return true;
+}
+
+// ====== SETUP ======
+function showSetup() {
+  document.getElementById('setupScreen').style.display = 'flex';
+}
+
+async function saveToken() {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (!token) return;
+  localStorage.setItem(TOKEN_KEY, token);
+  try {
+    await apiGet('/projects');
+    document.getElementById('setupScreen').style.display = 'none';
+    loadDashboard();
+  } catch(e) {
+    localStorage.removeItem(TOKEN_KEY);
+    document.getElementById('setupError').style.display = 'block';
+  }
+}
+
+function clearToken() {
+  if (confirm('◊ú◊†◊™◊ß ◊ê◊™ Todoist ◊ï◊ú◊ó◊ñ◊ï◊® ◊ú◊û◊°◊ö ◊î◊î◊™◊ó◊ë◊®◊ï◊™?')) {
+    localStorage.removeItem(TOKEN_KEY);
+    location.reload();
+  }
+}
+
+// ====== LOAD ======
+async function loadDashboard() {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) { showSetup(); return; }
+
+  const btn = document.getElementById('syncBtn');
+  btn.disabled = true; btn.textContent = '‚Üª...';
+  document.getElementById('updatedDisplay').textContent = '◊û◊°◊†◊õ◊®◊ü ◊¢◊ù Todoist...';
+
+  try {
+    const [tasks, projects] = await Promise.all([
+      apiGet('/tasks'),
+      apiGet('/projects')
+    ]);
+
+    const projById = {};
+    projects.forEach(p => { projById[p.id] = p.name; });
+
+    renderTasks(tasks, projById);
+    renderBottleneck(tasks, projById);
+
+    const t = localStorage.getItem(TOKEN_KEY);
+    document.getElementById('tokenStatus').textContent =
+      '‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢' + t.slice(-4) + ' ¬∑ ◊û◊ó◊ï◊ë◊®';
+
+    document.getElementById('updatedDisplay').textContent =
+      '◊°◊ï◊†◊õ◊®◊ü: ' + new Date().toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+  } catch(e) {
+    if (e.status === 401 || e.status === 403) {
+      localStorage.removeItem(TOKEN_KEY); showSetup();
+    } else {
+      document.getElementById('updatedDisplay').textContent = '‚ö†Ô∏è ◊©◊í◊ô◊ê◊î: ' + e.message;
+    }
+  } finally {
+    btn.disabled = false; btn.textContent = '‚Üª ◊®◊¢◊†◊ü';
+  }
+}
+
+function syncNow() { loadDashboard(); }
+
+// ====== RENDER TASKS ======
+function renderTasks(tasks, projById) {
+  const container = document.getElementById('tasks-container');
+  const groups = {};
+
+  tasks.forEach(t => {
+    const mapped = mapProject(projById[t.project_id] || '');
+    const key = mapped.group;
+    if (!groups[key]) groups[key] = { meta: mapped, tasks: [] };
+    groups[key].tasks.push(t);
+  });
+
+  const keys = Object.keys(groups).sort((a, b) => {
+    const ai = PROJ_ORDER.indexOf(a), bi = PROJ_ORDER.indexOf(b);
+    if (ai < 0 && bi < 0) return a.localeCompare(b);
+    if (ai < 0) return 1; if (bi < 0) return -1;
+    return ai - bi;
+  });
+
+  if (!keys.length) {
+    container.innerHTML = '<div class="empty">◊ê◊ô◊ü ◊û◊©◊ô◊û◊ï◊™ ◊§◊™◊ï◊ó◊ï◊™ üéâ</div>';
+    return;
+  }
+
+  let html = '';
+  keys.forEach(key => {
+    const { meta, tasks: gt } = groups[key];
+    gt.sort((a, b) => {
+      if (a.priority !== b.priority) return b.priority - a.priority;
+      const da = a.due ? a.due.date : '9999', db = b.due ? b.due.date : '9999';
+      return da.localeCompare(db);
+    });
+    const p1c = gt.filter(t => t.priority === 4).length;
+    html += `<div class="proj-group open" id="pg-${key}">
+      <div class="proj-header" onclick="toggleProj('${key}')">
+        <div class="proj-dot" style="background:${meta.color}"></div>
+        <div class="proj-name">${esc(meta.name)}</div>
+        ${p1c ? `<span class="sbadge s-above" style="font-size:10px">${p1c} P1</span>` : ''}
+        <div class="proj-count">${gt.length}</div>
+        <div class="proj-chevron">‚Ä∫</div>
+      </div>
+      <div class="proj-tasks">`;
+
+    gt.forEach(t => {
+      const pri = mapPriority(t.priority);
+      const due = t.due ? t.due.date : null;
+      const od = due && due < TODAY;
+      html += `<div class="task-item" id="ti-${t.id}">
+        <button class="task-check" onclick="completeTask('${t.id}',this)" title="◊°◊û◊ü ◊õ◊î◊ï◊©◊ú◊ù"></button>
+        <div class="task-body">
+          <div class="task-text">${esc(t.content)}</div>
+          ${t.description ? `<div class="task-desc">${esc(t.description)}</div>` : ''}
+          <div class="task-meta">
+            <span class="task-tag ${pri}">${pri.toUpperCase()}</span>
+            ${due ? `<span class="task-tag ${od ? 'overdue' : 'tag-due'}">${od ? '‚ö†Ô∏è OVERDUE ¬∑ ' : ''}${due}</span>` : ''}
+          </div>
+        </div>
+      </div>`;
+    });
+
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+// ====== RENDER BOTTLENECK ======
+function renderBottleneck(tasks, projById) {
+  const p1 = tasks
+    .filter(t => t.priority === 4)
+    .sort((a, b) => {
+      const da = a.due ? a.due.date : '9999', db = b.due ? b.due.date : '9999';
+      return da.localeCompare(db);
+    }).slice(0, 8);
+
+  const c = document.getElementById('bottleneck-container');
+  if (!p1.length) { c.innerHTML = '<div class="card"><div class="empty">◊ê◊ô◊ü P1 ◊§◊™◊ï◊ó◊ô◊ù üéâ</div></div>'; return; }
+
+  let html = '<div class="card"><div class="card-title">üö® P1 ‚Äî ◊ì◊ó◊ï◊£ ◊ë◊ô◊ï◊™◊®</div>';
+  p1.forEach(t => {
+    const proj = projById[t.project_id] || '';
+    const due = t.due ? t.due.date : null;
+    const od = due && due < TODAY;
+    html += `<div class="bn-item">
+      <div class="bn-icon">‚ö°</div>
+      <div class="bn-body">
+        <div class="bn-title">${esc(t.content)}</div>
+        <div class="bn-desc">${esc(proj)}${due ? ' ¬∑ ' + (od ? '‚ö†Ô∏è OVERDUE ¬∑ ' : '') + due : ''}</div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+// ====== COMPLETE TASK ======
+async function completeTask(id, btn) {
+  btn.classList.add('completing');
+  btn.textContent = '‚úì';
+  btn.disabled = true;
+  try {
+    await apiPost('/tasks/' + id + '/close');
+    const el = document.getElementById('ti-' + id);
+    if (el) {
+      el.style.transition = 'opacity .25s, height .3s .1s, padding .3s .1s';
+      el.style.overflow = 'hidden';
+      el.style.opacity = '0';
+      const h = el.offsetHeight;
+      el.style.height = h + 'px';
+      setTimeout(() => { el.style.height = '0'; el.style.padding = '0'; }, 50);
+      setTimeout(() => el.remove(), 400);
+    }
+  } catch(e) {
+    btn.classList.remove('completing');
+    btn.textContent = '';
+    btn.disabled = false;
+    alert('◊©◊í◊ô◊ê◊î ◊ë◊°◊í◊ô◊®◊™ ◊î◊û◊©◊ô◊û◊î: ' + e.message);
+  }
+}
+
+function toggleProj(k) { document.getElementById('pg-'+k)?.classList.toggle('open'); }
+
+// ====== APPROVALS ======
+function renderApprovals() {
+  try {
+    const data = JSON.parse(document.getElementById('radar-data').textContent);
+    const aps = data.approvals || [];
+    document.getElementById('ap-count').textContent = aps.length;
+    const c = document.getElementById('approvals-container');
+    if (!aps.length) { c.innerHTML = '<div class="empty">◊ê◊ô◊ü ◊§◊®◊ô◊ò◊ô◊ù ◊§◊™◊ï◊ó◊ô◊ù</div>'; return; }
+    c.innerHTML = aps.map(a => {
+      const opts = a.options ? `<div class="ap-options">${a.options.map(o =>
+        `<div class="ap-option ${o.color||''}">
+          <div class="ap-option-icon">${o.icon}</div>
+          <div class="ap-option-body"><div class="ap-option-label">${esc(o.label)}</div><div class="ap-option-note">${esc(o.note)}</div></div>
+        </div>`).join('')}</div>` : '';
+      return `<div class="ap-item">
+        <div class="ap-header"><div class="ap-title">${esc(a.title)}</div><div class="ap-tag">${esc(a.category)}</div></div>
+        <div class="ap-desc">${esc(a.description)}</div>
+        ${opts}
+        <div class="ap-note">üìã ◊§◊®◊ô◊ò ◊ñ◊î ◊û◊ï◊¶◊í ◊ú◊¢◊ô◊ï◊ü ‚Äî ◊ë◊ô◊¶◊ï◊¢ ◊ô◊ì◊†◊ô ◊†◊ì◊®◊©</div>
+      </div>`;
+    }).join('');
+  } catch(e) {}
+}
+
+// ====== INVEST ======
+function renderInvest() {
+  try {
+    const d = JSON.parse(document.getElementById('radar-data').textContent);
+    if (d.summary) document.getElementById('summary-text').textContent = d.summary;
+    const sm = {above:'s-above',wait:'s-wait',check:'s-check',buy:'s-buy'};
+    if (d.executeToday) {
+      document.getElementById('exec-grid').innerHTML = d.executeToday.map(e =>
+        `<div class="exec-item">
+          <div class="exec-ticker">${e.ticker}</div>
+          <div class="exec-name">${e.name}</div>
+          <div class="exec-price">~$${e.price}</div>
+          <div class="exec-target">◊ô◊¢◊ì: ${e.target}</div>
+          <span class="sbadge ${sm[e.status]||'s-check'}">${e.note}</span>
+        </div>`).join('');
+    }
+  } catch(e) {}
+}
+
+let chartsBuilt = false;
+function initCharts() {
+  if (chartsBuilt) return; chartsBuilt = true;
+  const s = {
+    labels:['AI ‚Üí ◊ó◊©◊û◊ú','◊©◊ï◊ß ◊î◊ï◊ü ◊ô◊©◊®◊ê◊ú◊ô','◊ó◊ú◊ú','◊ë◊ô◊ï◊ò◊ß','◊¶◊®◊ô◊õ◊î','◊™◊ï◊õ◊†◊î','◊û◊ñ◊ï◊û◊ü'],
+    values:[2671,1960,560,361,376,225,10655],
+    colors:['#e67e22','#2980b9','#8e44ad','#e74c3c','#f39c12','#16a085','#7f8c8d']
+  };
+  const m = {
+    labels:['◊™◊ú ◊ê◊ë◊ô◊ë','◊ê◊®◊î◊¥◊ë','◊û◊ñ◊ï◊û◊ü'],
+    values:[5559,921,10655],
+    colors:['#3498db','#2ecc71','#95a5a6']
+  };
+  [['sectorChart','sectorLegend',s],['marketChart','marketLegend',m]].forEach(([cid,lid,d]) => {
+    new Chart(document.getElementById(cid).getContext('2d'), {
+      type:'doughnut',
+      data:{labels:d.labels,datasets:[{data:d.values,backgroundColor:d.colors,borderWidth:1,borderColor:'#0d0d12'}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const t=c.dataset.data.reduce((a,b)=>a+b,0);return c.label+': '+(c.raw/t*100).toFixed(1)+'%';}}}}},
+    });
+    document.getElementById(lid).innerHTML = d.labels.map((l,i)=>
+      `<div class="legend-item"><div class="legend-dot" style="background:${d.colors[i]}"></div>${l}</div>`).join('');
+  });
+}
+
+// ====== NAV ======
+function nav(id, idx) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab,.bnav-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.querySelectorAll('.bnav-item')[idx].classList.add('active');
+  if (id === 'invest') setTimeout(initCharts, 50);
+}
+
+// ====== UTILS ======
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ====== INIT ======
+const _now = new Date();
+const _days = ['◊®◊ê◊©◊ï◊ü','◊©◊†◊ô','◊©◊ú◊ô◊©◊ô','◊®◊ë◊ô◊¢◊ô','◊ó◊û◊ô◊©◊ô','◊©◊ô◊©◊ô','◊©◊ë◊™'];
+document.getElementById('dateDisplay').textContent =
+  _days[_now.getDay()] + ', ' + _now.toLocaleDateString('he-IL');
+
+renderApprovals();
+renderInvest();
+checkStaleness();
+loadDashboard();
+
+function checkStaleness() {
+  try {
+    const data = JSON.parse(document.getElementById('radar-data').textContent);
+    if (!data.updated) return;
+    const ageHours = (Date.now() - new Date(data.updated).getTime()) / 3600000;
+    if (ageHours > 24) {
+      const el = document.getElementById('updatedDisplay');
+      const d = new Date(data.updated);
+      el.innerHTML = `<span style="color:var(--yellow)">‚ö†Ô∏è ◊†◊™◊ï◊†◊ô ◊î◊©◊ß◊¢◊ï◊™ ◊û-${d.toLocaleDateString('he-IL')} ‚Äî ${Math.floor(ageHours)} ◊©◊¢◊ï◊™ ◊ô◊©◊†◊ô◊ù</span>`;
+    }
+  } catch(e) {}
+}
+</script>
+</body>
+</html>
