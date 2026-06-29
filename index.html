@@ -1,167 +1,199 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Tal Dashboard">
-  <title>Tal's Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    :root{
-      --bg:#0d0d12;--card:#16161f;--card2:#1e1e2a;--border:#252533;
-      --accent:#6c63ff;--accent2:#ff6584;--green:#3dba6d;--yellow:#f4b942;
-      --red:#e05c5c;--text:#eeeef5;--muted:#7777aa;--radius:14px;
-      --nlp:#9b59b6;--amazon:#e67e22;--invest:#27ae60;--trees:#16a085;--personal:#2980b9;--bills:#c0392b;
-    }
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;min-height:100vh;padding-bottom:72px;overflow-x:hidden}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tal Dashboard">
+<title>Tal's Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+--bg:#0d0d12;--card:#16161f;--card2:#1e1e2a;--border:#252533;
+--accent:#6c63ff;--accent2:#ff6584;--green:#3dba6d;--yellow:#f4b942;
+--red:#e05c5c;--text:#eeeef5;--muted:#7777aa;--radius:14px;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;min-height:100vh;padding-bottom:72px;overflow-x:hidden}
 
-    /* HEADER */
-    .header{background:linear-gradient(135deg,#13131e,#1a1a2e);padding:16px 16px 12px;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
-    .header-row{display:flex;justify-content:space-between;align-items:center}
-    .header h1{font-size:19px;font-weight:700}
-    .header h1 span{color:var(--accent)}
-    .date-pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--muted)}
-    .updated{font-size:11px;color:var(--muted);margin-top:5px}
+/* HEADER */
+.header{background:linear-gradient(135deg,#13131e,#1a1a2e);padding:16px 16px 12px;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
+.header-row{display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:19px;font-weight:700}
+.header h1 span{color:var(--accent)}
+.date-pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--muted)}
+.updated{font-size:11px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:6px}
+.sync-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:10px;padding:2px 8px;cursor:pointer;transition:all .2s}
+.sync-btn:hover{border-color:var(--accent);color:var(--accent)}
+.sync-btn:disabled{opacity:0.5;cursor:not-allowed}
 
-    /* TABS */
-    .tabs{display:flex;gap:6px;padding:10px 14px 0;background:var(--bg);overflow-x:auto;scrollbar-width:none;position:sticky;top:66px;z-index:99}
-    .tabs::-webkit-scrollbar{display:none}
-    .tab{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap}
-    .tab.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+/* TABS */
+.tabs{display:flex;gap:6px;padding:10px 14px 0;background:var(--bg);overflow-x:auto;scrollbar-width:none;position:sticky;top:66px;z-index:99}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
 
-    /* CONTENT */
-    .content{padding:12px 12px}
-    .section{display:none}.section.active{display:block}
+/* CONTENT */
+.content{padding:12px 12px}
+.section{display:none}.section.active{display:block}
 
-    /* CARD */
-    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-    .card-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;font-weight:600;display:flex;align-items:center;justify-content:space-between}
-    .card-title .count{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:1px 8px;font-size:11px;color:var(--muted)}
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.card-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;font-weight:600;display:flex;align-items:center;justify-content:space-between}
+.card-title .count{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:1px 8px;font-size:11px;color:var(--muted)}
 
-    /* PROJECT GROUP */
-    .proj-group{margin-bottom:8px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
-    .proj-header{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;user-select:none;background:var(--card2)}
-    .proj-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-    .proj-name{font-size:13px;font-weight:600;flex:1}
-    .proj-count{font-size:11px;color:var(--muted);background:var(--bg);border-radius:8px;padding:2px 7px}
-    .proj-chevron{color:var(--muted);font-size:12px;transition:transform .2s}
-    .proj-group.open .proj-chevron{transform:rotate(90deg)}
-    .proj-tasks{display:none;padding:0 12px}
-    .proj-group.open .proj-tasks{display:block}
+/* PROJECT GROUP */
+.proj-group{margin-bottom:8px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.proj-header{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;user-select:none;background:var(--card2)}
+.proj-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.proj-name{font-size:13px;font-weight:600;flex:1}
+.proj-count{font-size:11px;color:var(--muted);background:var(--bg);border-radius:8px;padding:2px 7px}
+.proj-chevron{color:var(--muted);font-size:12px;transition:transform .2s}
+.proj-group.open .proj-chevron{transform:rotate(90deg)}
+.proj-tasks{display:none;padding:0 12px}
+.proj-group.open .proj-tasks{display:block}
 
-    /* TASK ITEM — read-only */
-    .task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-    .task-item:last-child{border-bottom:none}
-    .task-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:5px}
-    .task-body{flex:1;min-width:0}
-    .task-text{font-size:14px;line-height:1.4}
-    .task-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;white-space:pre-wrap}
-    .task-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
-    .task-tag{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
-    .p1{background:rgba(224,92,92,.18);color:var(--red)}
-    .p2{background:rgba(244,185,66,.15);color:var(--yellow)}
-    .p3{background:rgba(119,119,170,.15);color:var(--muted)}
-    .overdue{background:rgba(224,92,92,.25);color:var(--red)}
-    .tag-due{font-size:10px;color:var(--muted);padding:2px 6px;background:var(--card2);border-radius:6px}
+/* TASK ITEM */
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);transition:opacity .3s}
+.task-item:last-child{border-bottom:none}
+.task-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:none;cursor:pointer;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .2s;-webkit-appearance:none;appearance:none;color:#fff;font-size:12px;font-weight:700}
+.task-check:hover{border-color:var(--green);background:rgba(61,186,109,.1)}
+.task-check.completing{border-color:var(--green);background:var(--green)}
+.task-body{flex:1;min-width:0}
+.task-text{font-size:14px;line-height:1.4}
+.task-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;white-space:pre-wrap}
+.task-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.task-tag{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
+.p1{background:rgba(224,92,92,.18);color:var(--red)}
+.p2{background:rgba(244,185,66,.15);color:var(--yellow)}
+.p3{background:rgba(119,119,170,.15);color:var(--muted)}
+.p4{background:rgba(119,119,170,.08);color:var(--muted)}
+.overdue{background:rgba(224,92,92,.25);color:var(--red)}
+.tag-due{font-size:10px;color:var(--muted);padding:2px 6px;background:var(--card2);border-radius:6px}
 
-    /* BOTTLENECK */
-    .bn-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
-    .bn-item:last-child{border-bottom:none}
-    .bn-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-    .bn-body{flex:1}
-    .bn-title{font-size:14px;font-weight:600}
-    .bn-desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
-    .bn-action{margin-top:6px;display:inline-block;background:var(--accent);color:#fff;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none}
+/* SETUP SCREEN */
+.setup-screen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.setup-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 24px;max-width:400px;width:100%}
+.setup-title{font-size:20px;font-weight:700;margin-bottom:8px}
+.setup-title span{color:var(--accent)}
+.setup-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.setup-input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-size:13px;font-family:monospace;outline:none;transition:border-color .2s;margin-bottom:12px;direction:ltr;text-align:left}
+.setup-input:focus{border-color:var(--accent)}
+.setup-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px}
+.setup-link{font-size:12px;color:var(--accent);text-decoration:none;display:block;text-align:center}
+.setup-error{font-size:12px;color:var(--red);margin-top:6px;display:none}
 
-    /* APPROVAL PIPELINE */
-    .ap-item{background:var(--card2);border:1px solid var(--yellow);border-radius:10px;padding:12px;margin-bottom:8px}
-    .ap-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-    .ap-title{font-size:14px;font-weight:700}
-    .ap-tag{font-size:10px;background:rgba(244,185,66,.2);color:var(--yellow);border-radius:6px;padding:2px 8px;font-weight:600}
-    .ap-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px}
-    /* approval options — read-only display */
-    .ap-options{display:flex;flex-direction:column;gap:7px}
-    .ap-option{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:right}
-    .ap-option-icon{font-size:18px;flex-shrink:0}
-    .ap-option-body{flex:1}
-    .ap-option-label{font-size:13px;font-weight:600}
-    .ap-option-note{font-size:11px;color:var(--muted);margin-top:1px;line-height:1.4}
-    .ap-option.opt-green{border-color:rgba(61,186,109,.3)}
-    .ap-option.opt-yellow{border-color:rgba(244,185,66,.3)}
-    .ap-option.opt-red{border-color:rgba(224,92,92,.3)}
-    .ap-option.opt-blue{border-color:rgba(108,99,255,.3)}
-    .ap-note{font-size:11px;color:var(--muted);margin-top:8px;padding:6px 8px;background:var(--bg);border-radius:6px;line-height:1.4}
+/* LOADING */
+.loading{text-align:center;padding:40px 20px;color:var(--muted)}
+.loading-spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    /* INVEST */
-    .exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .exec-item{background:var(--card2);border-radius:10px;padding:12px;border:1px solid var(--border)}
-    .exec-ticker{font-size:18px;font-weight:800}
-    .exec-name{font-size:11px;color:var(--muted);margin:1px 0}
-    .exec-price{font-size:13px;color:var(--text);margin:2px 0}
-    .exec-target{font-size:11px;color:var(--muted)}
-    .sbadge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-top:5px}
-    .s-buy{background:rgba(61,186,109,.2);color:var(--green)}
-    .s-wait{background:rgba(244,185,66,.2);color:var(--yellow)}
-    .s-above{background:rgba(224,92,92,.2);color:var(--red)}
-    .s-check{background:rgba(108,99,255,.2);color:var(--accent)}
+/* BOTTLENECK */
+.bn-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.bn-item:last-child{border-bottom:none}
+.bn-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.bn-body{flex:1}
+.bn-title{font-size:14px;font-weight:600}
+.bn-desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
 
-    /* PIE CHART */
-    .chart-wrap{position:relative;height:200px;margin:10px 0}
-    .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-    .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-    .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* APPROVALS */
+.ap-item{background:var(--card2);border:1px solid var(--yellow);border-radius:10px;padding:12px;margin-bottom:8px}
+.ap-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ap-title{font-size:14px;font-weight:700}
+.ap-tag{font-size:10px;background:rgba(244,185,66,.2);color:var(--yellow);border-radius:6px;padding:2px 8px;font-weight:600}
+.ap-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.ap-options{display:flex;flex-direction:column;gap:7px}
+.ap-option{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.ap-option-icon{font-size:18px;flex-shrink:0}
+.ap-option-body{flex:1}
+.ap-option-label{font-size:13px;font-weight:600}
+.ap-option-note{font-size:11px;color:var(--muted);margin-top:1px;line-height:1.4}
+.ap-option.opt-green{border-color:rgba(61,186,109,.3)}
+.ap-option.opt-yellow{border-color:rgba(244,185,66,.3)}
+.ap-option.opt-red{border-color:rgba(224,92,92,.3)}
+.ap-option.opt-blue{border-color:rgba(108,99,255,.3)}
+.ap-note{font-size:11px;color:var(--muted);margin-top:8px;padding:6px 8px;background:var(--bg);border-radius:6px;line-height:1.4}
 
-    /* PORTFOLIO */
-    .hold-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
-    .hold-row:last-child{border-bottom:none}
-    .hold-left{display:flex;flex-direction:column;gap:1px}
-    .hold-ticker{font-weight:700;font-size:15px}
-    .hold-name{font-size:11px;color:var(--muted)}
-    .hold-right{text-align:left}
-    .hold-val{font-weight:600;font-size:13px}
-    .hold-note{font-size:11px;margin-top:1px}
-    .pos{color:var(--green)}.neg{color:var(--red)}.neu{color:var(--muted)}
+/* INVEST */
+.exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.exec-item{background:var(--card2);border-radius:10px;padding:12px;border:1px solid var(--border)}
+.exec-ticker{font-size:18px;font-weight:800}
+.exec-name{font-size:11px;color:var(--muted);margin:1px 0}
+.exec-price{font-size:13px;color:var(--text);margin:2px 0}
+.exec-target{font-size:11px;color:var(--muted)}
+.sbadge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-top:5px}
+.s-buy{background:rgba(61,186,109,.2);color:var(--green)}
+.s-wait{background:rgba(244,185,66,.2);color:var(--yellow)}
+.s-above{background:rgba(224,92,92,.2);color:var(--red)}
+.s-check{background:rgba(108,99,255,.2);color:var(--accent)}
+.chart-wrap{position:relative;height:200px;margin:10px 0}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-    /* CASH */
-    .cash-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
-    .cash-row:last-child{border-bottom:none}
-    .cash-label{color:var(--muted);font-size:13px}
-    .cash-val{font-weight:700;font-size:15px}
-    .cash-val.big{font-size:22px;color:var(--green)}
+/* PORTFOLIO */
+.hold-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.hold-row:last-child{border-bottom:none}
+.hold-left{display:flex;flex-direction:column;gap:1px}
+.hold-ticker{font-weight:700;font-size:15px}
+.hold-name{font-size:11px;color:var(--muted)}
+.hold-right{text-align:left}
+.hold-val{font-weight:600;font-size:13px}
+.hold-note{font-size:11px;margin-top:1px}
+.pos{color:var(--green)}.neg{color:var(--red)}.neu{color:var(--muted)}
+.cash-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.cash-row:last-child{border-bottom:none}
+.cash-label{color:var(--muted);font-size:13px}
+.cash-val{font-weight:700;font-size:15px}
+.cash-val.big{font-size:22px;color:var(--green)}
+.summary-box{background:linear-gradient(135deg,var(--accent),#9c27b0);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.summary-box p{font-size:13px;line-height:1.6;opacity:.95}
+.watchlist-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.watchlist-item:last-child{border-bottom:none}
+.w-ticker{font-weight:700}
+.w-note{font-size:11px;color:var(--muted);margin-top:1px}
+.w-alert{font-size:11px;color:var(--yellow)}
 
-    /* SUMMARY BOX */
-    .summary-box{background:linear-gradient(135deg,var(--accent),#9c27b0);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-    .summary-box p{font-size:13px;line-height:1.6;opacity:.95}
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;padding:6px 0 env(safe-area-inset-bottom,6px);z-index:200}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px;cursor:pointer;color:var(--muted);font-size:10px;transition:color .2s}
+.bnav-item.active{color:var(--accent)}
+.bnav-icon{font-size:19px;line-height:1}
 
-    /* BOTTOM NAV */
-    .bnav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;padding:6px 0 env(safe-area-inset-bottom,6px);z-index:200}
-    .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px;cursor:pointer;color:var(--muted);font-size:10px;transition:color .2s}
-    .bnav-item.active{color:var(--accent)}
-    .bnav-icon{font-size:19px;line-height:1}
-
-    /* MISC */
-    .divider{height:1px;background:var(--border);margin:8px 0}
-    .empty{text-align:center;color:var(--muted);padding:24px;font-size:13px}
-    .section-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 6px;font-weight:600}
-    .alert-banner{background:rgba(224,92,92,.12);border:1px solid rgba(224,92,92,.3);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;color:var(--red)}
-    .watchlist-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
-    .watchlist-item:last-child{border-bottom:none}
-    .w-ticker{font-weight:700}
-    .w-note{font-size:11px;color:var(--muted);margin-top:1px}
-    .w-alert{font-size:11px;color:var(--yellow)}
-  </style>
+/* SETTINGS */
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-label{font-size:14px}
+.settings-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.settings-btn{background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;padding:6px 14px;cursor:pointer}
+.settings-btn.danger{border-color:rgba(224,92,92,.4);color:var(--red)}
+.empty{text-align:center;color:var(--muted);padding:24px;font-size:13px}
+</style>
 </head>
 <body>
+
+<!-- SETUP SCREEN -->
+<div class="setup-screen" id="setupScreen" style="display:none">
+  <div class="setup-card">
+    <div class="setup-title">Tal's <span>Dashboard</span></div>
+    <div class="setup-sub">כדי לסנכרן משימות בזמן אמת, הכנס את מפתח ה-API של Todoist. הוא נשמר מקומית בדפדפן בלבד — לא מועלה לשום שרת.</div>
+    <input class="setup-input" type="password" id="tokenInput" placeholder="Todoist API token...">
+    <div class="setup-error" id="setupError">המפתח לא תקין — בדוק ונסה שוב</div>
+    <button class="setup-btn" onclick="saveToken()">התחבר</button>
+    <a class="setup-link" href="https://app.todoist.com/app/settings/integrations/developer" target="_blank">השג API token ← Todoist → Settings → Integrations → Developer</a>
+  </div>
+</div>
 
 <div class="header">
   <div class="header-row">
     <h1>Tal's <span>Dashboard</span></h1>
     <div class="date-pill" id="dateDisplay"></div>
   </div>
-  <div class="updated" id="updatedDisplay">טוען...</div>
+  <div class="updated">
+    <span id="updatedDisplay">מסנכרן...</span>
+    <button class="sync-btn" id="syncBtn" onclick="syncNow()">↻ רענן</button>
+  </div>
 </div>
 
 <div class="tabs">
@@ -170,186 +202,53 @@
   <div class="tab" onclick="nav('approvals',2)">🎯 אישורים</div>
   <div class="tab" onclick="nav('invest',3)">📈 השקעות</div>
   <div class="tab" onclick="nav('portfolio',4)">💼 תיק</div>
+  <div class="tab" onclick="nav('settings',5)">⚙️</div>
 </div>
 
 <div class="content">
 
-<!-- ===== TASKS ===== -->
 <div id="tasks" class="section active">
-  <div id="tasks-container"></div>
+  <div id="tasks-container"><div class="loading"><div class="loading-spinner"></div>טוען משימות מ-Todoist...</div></div>
 </div>
 
-<!-- ===== BOTTLENECK ===== -->
 <div id="bottleneck" class="section">
-  <div class="card">
-    <div class="card-title">🚨 דחוף — ממתין לך עכשיו</div>
-    <div class="bn-item">
-      <div class="bn-icon">📤</div>
-      <div class="bn-body">
-        <div class="bn-title">4 flat files לא הועלו לסלר סנטרל</div>
-        <div class="bn-desc">CPSIA v3 (overdue), Hero V2, Non-hero v2, Backend search terms — כולם מוכנים, רק ממתינים להעלאה ידנית שלך</div>
-        <button class="bn-action" onclick="nav('tasks',0)">← ראה משימות אמזון</button>
-      </div>
-    </div>
-    <div class="bn-item">
-      <div class="bn-icon">📸</div>
-      <div class="bn-body">
-        <div class="bn-title">A+ תמונות — due June 28</div>
-        <div class="bn-desc">Module 1: בנר Canva 970×600px. Module 4: צלם gift pouch עם iPhone (300×400px). Module 5: 3 cross-sell shots.</div>
-      </div>
-    </div>
-    <div class="bn-item">
-      <div class="bn-icon">🚨</div>
-      <div class="bn-body">
-        <div class="bn-title">MSK MyChart — התראת אבטחה</div>
-        <div class="bn-desc">מכשיר חדש חובר לחשבון. אם לא אתה — התקשר 646-227-2593 מיידית.</div>
-      </div>
-    </div>
-    <div class="bn-item">
-      <div class="bn-icon">💳</div>
-      <div class="bn-body">
-        <div class="bn-title">תשלומים ממתינים</div>
-        <div class="bn-desc">אבן יהודה (overdue) · AT&T $124.36 (July 8) · Namecheap credit card update</div>
-      </div>
-    </div>
-    <div class="bn-item">
-      <div class="bn-icon">🌳</div>
-      <div class="bn-body">
-        <div class="bn-title">Hugs and Trees — 3 צווארי בקבוק P1</div>
-        <div class="bn-desc">Set up hugsandtrees.com · עדכן Namecheap credit card · Sketch ring installation design</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">⏳ סקירה לפני שליחה / הגשה</div>
-    <div class="bn-item">
-      <div class="bn-icon">📝</div>
-      <div class="bn-body">
-        <div class="bn-title">מבחן NLP — June 30</div>
-        <div class="bn-desc">חזרה על M16, C2, M15, P15, P16 לפני הגשה. SSOT: ~/Claude/NLP/nlp-ssot.md</div>
-      </div>
-    </div>
-    <div class="bn-item">
-      <div class="bn-icon">💹</div>
-      <div class="bn-body">
-        <div class="bn-title">החלטת TSLA לפני June 30</div>
-        <div class="bn-desc">להחזיק? למכור ולפנות הון ל-ETN/VRT? צריך החלטה שלך לפני ביצוע ב-30/6.</div>
-      </div>
-    </div>
-    <div class="bn-item">
-      <div class="bn-icon">🎯</div>
-      <div class="bn-body">
-        <div class="bn-title">Prime Day — הגשה July 1</div>
-        <div class="bn-desc">קופונים ל-5 ASINs + Lightning Deal ל-B01MTJNYHE. תוכנית מוכנה, צריך הגשה ידנית ב-SC.</div>
-      </div>
-    </div>
-  </div>
+  <div id="bottleneck-container"><div class="loading"><div class="loading-spinner"></div>טוען...</div></div>
 </div>
 
-<!-- ===== APPROVALS ===== -->
 <div id="approvals" class="section">
   <div class="card">
     <div class="card-title">🎯 ממתין לאישורך <span class="count" id="ap-count">0</span></div>
     <div id="approvals-container"></div>
   </div>
-
-  <div class="card" style="margin-top:10px">
-    <div class="card-title">📋 החלטות שהתקבלו</div>
-    <div class="bn-item">
-      <div class="bn-icon">📦</div>
-      <div class="bn-body">
-        <div class="bn-title">Virtual Bundles — 3 bundles</div>
-        <div class="bn-desc">Copy מוכן · העלה ב-SC → Brands → Virtual Bundles</div>
-      </div>
-    </div>
-    <div class="bn-item">
-      <div class="bn-icon">🎟️</div>
-      <div class="bn-body">
-        <div class="bn-title">Prime Day Coupon Strategy</div>
-        <div class="bn-desc">15% Fish Hook · 12% Plumeria/Honu · 10% Bangle · Lightning Deal B01MTJNYHE · הגשה July 1</div>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- ===== INVEST ===== -->
 <div id="invest" class="section">
-  <div class="card" id="execute-card">
+  <div class="card">
     <div class="card-title">⚡ Execute Today?</div>
-    <div class="exec-grid" id="exec-grid">
-      <div class="exec-item">
-        <div class="exec-ticker">VRT</div>
-        <div class="exec-name">Vertiv</div>
-        <div class="exec-price">מחיר: ~$304</div>
-        <div class="exec-target">יעד: &lt;$130</div>
-        <span class="sbadge s-above">⚠️ stale thesis</span>
-      </div>
-      <div class="exec-item">
-        <div class="exec-ticker">ETN</div>
-        <div class="exec-name">Eaton</div>
-        <div class="exec-price">מחיר: ~$402</div>
-        <div class="exec-target">יעד: &lt;$390</div>
-        <span class="sbadge s-wait">⏳ 3% מעל יעד</span>
-      </div>
-      <div class="exec-item">
-        <div class="exec-ticker">SPCX</div>
-        <div class="exec-name">Space ETF</div>
-        <div class="exec-price">מחיר: ~$153</div>
-        <div class="exec-target">כבר מחזיק</div>
-        <span class="sbadge s-check">🔍 בדוק כמות</span>
-      </div>
-      <div class="exec-item">
-        <div class="exec-ticker">GEV</div>
-        <div class="exec-name">GE Vernova</div>
-        <div class="exec-price">מחיר: ~$1,057</div>
-        <div class="exec-target">יעד: &lt;$1,000</div>
-        <span class="sbadge s-wait">⏳ 6% מעל יעד</span>
-      </div>
-    </div>
+    <div class="exec-grid" id="exec-grid"></div>
   </div>
-
   <div class="card">
     <div class="card-title">🥧 פיזור לפי סקטור</div>
-    <div class="chart-wrap">
-      <canvas id="sectorChart"></canvas>
-    </div>
+    <div class="chart-wrap"><canvas id="sectorChart"></canvas></div>
     <div class="legend" id="sectorLegend"></div>
   </div>
-
   <div class="card">
     <div class="card-title">🌍 פיזור לפי שוק</div>
-    <div class="chart-wrap">
-      <canvas id="marketChart"></canvas>
-    </div>
+    <div class="chart-wrap"><canvas id="marketChart"></canvas></div>
     <div class="legend" id="marketLegend"></div>
   </div>
-
   <div class="card">
     <div class="card-title">💬 תקציר</div>
-    <div class="summary-box">
-      <p id="summary-text">₪10,655 זמין לפריסה. ETN ו-GEV מעל יעד ב-3–6%. VRT דורש הערכה מחדש של thesis (מחיר $304 vs יעד מקורי $130 — stale). שבת: בדוק TASE. ראשון: בדוק ETN אם ירד ל-$390.</p>
-    </div>
+    <div class="summary-box"><p id="summary-text"></p></div>
   </div>
-
   <div class="card">
     <div class="card-title">👁️ Watchlist</div>
-    <div class="watchlist-item">
-      <div><div class="w-ticker">ETN</div><div class="w-note">Eaton — data center power</div></div>
-      <div class="w-alert">התראה: $390</div>
-    </div>
-    <div class="watchlist-item">
-      <div><div class="w-ticker">GEV</div><div class="w-note">GE Vernova — grid infra</div></div>
-      <div class="w-alert">התראה: $1,000</div>
-    </div>
-    <div class="watchlist-item">
-      <div><div class="w-ticker">VRT</div><div class="w-note">Vertiv — data center cooling</div></div>
-      <div class="w-alert">בדוק thesis מחדש</div>
-    </div>
+    <div class="watchlist-item"><div><div class="w-ticker">ETN</div><div class="w-note">Eaton — data center power</div></div><div class="w-alert">התראה: $390</div></div>
+    <div class="watchlist-item"><div><div class="w-ticker">GEV</div><div class="w-note">GE Vernova — grid infra</div></div><div class="w-alert">התראה: $1,000</div></div>
+    <div class="watchlist-item"><div><div class="w-ticker">VRT</div><div class="w-note">Vertiv</div></div><div class="w-alert">בדוק thesis מחדש</div></div>
   </div>
 </div>
 
-<!-- ===== PORTFOLIO ===== -->
 <div id="portfolio" class="section">
   <div class="card">
     <div class="card-title">💵 מזומן פנוי</div>
@@ -357,69 +256,44 @@
     <div class="cash-row"><span class="cash-label">קיים במיטב</span><span class="cash-val">₪655</span></div>
     <div class="cash-row"><span class="cash-label">הפקדה 25/06</span><span class="cash-val">₪10,000</span></div>
   </div>
-
   <div class="card">
-    <div class="card-title">📊 המלצת פריסה (Trend to Trade)</div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">ETN</div><div class="hold-name">Eaton — כניסה אם ≤$390</div></div>
-      <div class="hold-right"><div class="hold-val pos">₪1,400–2,800</div><div class="hold-note neu">1–2 מניות · ראשון 30/6</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">GEV</div><div class="hold-name">GE Vernova — כניסה אם ≤$1,000</div></div>
-      <div class="hold-right"><div class="hold-val pos">₪4,000–5,000</div><div class="hold-note neu">שמור רזרבה · ראשון</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">הוספה — בדוק כמות קיימת</div></div>
-      <div class="hold-right"><div class="hold-val pos">₪570–1,140</div><div class="hold-note neu">1–2 מניות</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">CASH</div><div class="hold-name">רזרבה לאחר פריסה</div></div>
-      <div class="hold-right"><div class="hold-val neu">₪1,000–3,000</div><div class="hold-note neu">לא לרוקן לחלוטין</div></div>
-    </div>
+    <div class="card-title">📊 המלצת פריסה</div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">ETN</div><div class="hold-name">כניסה אם ≤$390</div></div><div class="hold-right"><div class="hold-val pos">₪1,400–2,800</div><div class="hold-note neu">1–2 מניות</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">GEV</div><div class="hold-name">כניסה אם ≤$1,000</div></div><div class="hold-right"><div class="hold-val pos">₪4,000–5,000</div><div class="hold-note neu">שמור רזרבה</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">הוספה</div></div><div class="hold-right"><div class="hold-val pos">₪570–1,140</div><div class="hold-note neu">1–2 מניות</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">CASH</div><div class="hold-name">רזרבה</div></div><div class="hold-right"><div class="hold-val neu">₪1,000–3,000</div></div></div>
   </div>
-
   <div class="card">
     <div class="card-title">📋 תיק נוכחי — Meitav</div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">IBI</div><div class="hold-name">IBI Investment House</div></div>
-      <div class="hold-right"><div class="hold-val">₪1,960</div><div class="hold-note pos">~19% · שוק הון ישראלי</div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">IBI</div><div class="hold-name">IBI Investment House</div></div><div class="hold-right"><div class="hold-val">₪1,960</div><div class="hold-note pos">~19%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">OPC</div><div class="hold-name">OPC Energy</div></div><div class="hold-right"><div class="hold-val">₪1,673</div><div class="hold-note pos">~16%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">Space Economy ETF</div></div><div class="hold-right"><div class="hold-val">₪560</div><div class="hold-note neu">~5%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Doral</div><div class="hold-name">Doral Energy</div></div><div class="hold-right"><div class="hold-val">₪512</div><div class="hold-note pos">~5%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Enlight</div><div class="hold-name">Enlight Energy</div></div><div class="hold-right"><div class="hold-val">₪486</div><div class="hold-note pos">~5%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Max</div><div class="hold-name">Max Stock</div></div><div class="hold-right"><div class="hold-val">₪376</div><div class="hold-note neu">~4%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">MRNA</div><div class="hold-name">Moderna</div></div><div class="hold-right"><div class="hold-val">₪361</div><div class="hold-note neg">~3.5% · סיכון גבוה</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">Elad</div><div class="hold-name">Elad Software</div></div><div class="hold-right"><div class="hold-val">₪225</div><div class="hold-note neu">~2%</div></div></div>
+    <div class="hold-row"><div class="hold-left"><div class="hold-ticker">TSLA</div><div class="hold-name">Tesla (בהעברה)</div></div><div class="hold-right"><div class="hold-val">₪2,219</div><div class="hold-note neg">⚠️ ממתין להחלטה</div></div></div>
+  </div>
+</div>
+
+<div id="settings" class="section">
+  <div class="card">
+    <div class="card-title">⚙️ הגדרות</div>
+    <div class="settings-row">
+      <div><div class="settings-label">Todoist API Token</div><div class="settings-sub" id="tokenStatus">טוען...</div></div>
+      <button class="settings-btn danger" onclick="clearToken()">נתק</button>
     </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">OPC</div><div class="hold-name">OPC Energy</div></div>
-      <div class="hold-right"><div class="hold-val">₪1,673</div><div class="hold-note pos">~16% · AI → חשמל</div></div>
+    <div class="settings-row">
+      <div><div class="settings-label">סנכרון</div><div class="settings-sub">כל פתיחת דף מסנכרת מ-Todoist בזמן אמת</div></div>
     </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">SPCX</div><div class="hold-name">Space Economy ETF</div></div>
-      <div class="hold-right"><div class="hold-val">₪560</div><div class="hold-note neu">~5% · כלכלת חלל</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">Doral</div><div class="hold-name">Doral Energy</div></div>
-      <div class="hold-right"><div class="hold-val">₪512</div><div class="hold-note pos">~5% · AI → חשמל</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">Enlight</div><div class="hold-name">Enlight Energy</div></div>
-      <div class="hold-right"><div class="hold-val">₪486</div><div class="hold-note pos">~5% · AI → חשמל</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">Max</div><div class="hold-name">Max Stock</div></div>
-      <div class="hold-right"><div class="hold-val">₪376</div><div class="hold-note neu">~4% · צריכה ישראלית</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">MRNA</div><div class="hold-name">Moderna</div></div>
-      <div class="hold-right"><div class="hold-val">₪361</div><div class="hold-note neg">~3.5% · ביוטק · סיכון גבוה</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">Elad</div><div class="hold-name">Elad Software</div></div>
-      <div class="hold-right"><div class="hold-val">₪225</div><div class="hold-note neu">~2% · תוכנה ישראלית</div></div>
-    </div>
-    <div class="hold-row">
-      <div class="hold-left"><div class="hold-ticker">TSLA</div><div class="hold-name">Tesla (בהעברה)</div></div>
-      <div class="hold-right"><div class="hold-val">₪2,219</div><div class="hold-note neg">⚠️ ממתין להחלטה</div></div>
+    <div class="settings-row">
+      <div><div class="settings-label">השקעות</div><div class="settings-sub">מעודכן ע"י Trend to Trade task (radar-data JSON)</div></div>
     </div>
   </div>
 </div>
 
-</div><!-- /content -->
+</div>
 
 <!-- BOTTOM NAV -->
 <div class="bnav">
@@ -428,9 +302,10 @@
   <div class="bnav-item" onclick="nav('approvals',2)"><div class="bnav-icon">🎯</div><div>אישורים</div></div>
   <div class="bnav-item" onclick="nav('invest',3)"><div class="bnav-icon">📈</div><div>השקעות</div></div>
   <div class="bnav-item" onclick="nav('portfolio',4)"><div class="bnav-icon">💼</div><div>תיק</div></div>
+  <div class="bnav-item" onclick="nav('settings',5)"><div class="bnav-icon">⚙️</div><div>הגדרות</div></div>
 </div>
 
-<!-- RADAR DATA (updated by morning task) -->
+<!-- RADAR DATA — updated by Trend to Trade scheduled task -->
 <script type="application/json" id="radar-data">
 {
   "updated": "2026-06-27T18:00:00+03:00",
@@ -446,7 +321,7 @@
       "id": "ap1",
       "title": "Parent-Child Variation — Fish Hook Silver + Gold",
       "category": "אמזון",
-      "description": "להפוך את B01MTJNYHE (Silver) ו-B01M6E4XJG (Gold) ל-parent-child variation. מאגד reviews לפני Prime Day, משפר visibility. SC → Catalog → Manage Inventory → Add variation.",
+      "description": "להפוך את B01MTJNYHE (Silver) ו-B01M6E4XJG (Gold) ל-parent-child variation. מאגד reviews לפני Prime Day, משפר visibility.",
       "action": "פנייה ל-SC Seller Support לאיחוד ASIN"
     },
     {
@@ -458,218 +333,37 @@
         {"icon":"⏳","label":"המתן לקבלת המניות","note":"המתן עד 30/6, אז קבל החלטה אחרי Morning Radar","color":"opt-blue"},
         {"icon":"💹","label":"מכור ופנה הון ל-ETN / GEV","note":"אם ETN ≤$390 ביום קבלה — מכור TSLA ותיכנס","color":"opt-green"},
         {"icon":"🔵","label":"החזק כתזה EV + Autonomy","note":"רובוטיקה, אנרגיה, FSD — תזה ארוכת טווח","color":"opt-yellow"},
-        {"icon":"❌","label":"מכור הכל — לא מתאים לתיק","note":"פנה את ההון לתיק ה-AI Power הקיים","color":"opt-red"}
-      ]
-    }
-  ]
-}
-</script>
-
-<script>
-// ====== DATA ======
-const TASKS = [
-  // NLP
-  {id:'nlp1',proj:'nlp',text:'📝 מבחן NLP — Hadas Wilf',desc:'שיעורי חזרה: M16, C2, M15, P15, P16\nSSoT: ~/Claude/NLP/nlp-ssot.md',pri:'p1',due:'2026-06-30'},
-  {id:'nlp2',proj:'nlp',text:'📚 NLP Phase 2: קבע שיעורים לתמלול',desc:'SSOT מוכן (32 שיעורים). בחר 3–5 ראשונים.',pri:'p3',due:null},
-  {id:'nlp3',proj:'nlp',text:'💳 הוסף קרדיט OpenAI Whisper API',desc:'platform.openai.com → Billing → $5 מינימום',pri:'p2',due:'2026-06-26',overdue:true},
-  // Amazon
-  {id:'az1',proj:'amazon',text:'📤 CPSIA flat file v3 → SC',desc:'~/Desktop/Codex/flat-files/2026-06-25-cpsia-title-fix-v3.txt\n⚠️ Enforcement July 27',pri:'p1',due:'2026-06-26',overdue:true},
-  {id:'az2',proj:'amazon',text:'📤 Hero V2 flat file → SC',desc:'~/Desktop/Codex/flat-files/2026-06-27-hero-v2-titles-bullets.txt\n5 ASINs: B01MTJNYHE, B01M6E4XJG, B07VCSP537, B0792CLRQD, B078XBGP9W',pri:'p1',due:'2026-06-27'},
-  {id:'az3',proj:'amazon',text:'📤 Non-hero title fix v2 → SC',desc:'~/Desktop/Codex/flat-files/2026-06-24-title-fix-non-hero-v2.txt',pri:'p1',due:'2026-06-27'},
-  {id:'az4',proj:'amazon',text:'🎨 A+ Module 1: בנר Canva 970×600px',desc:'Brief: ~/Desktop/Codex/reports/product-intelligence/2026-06-21-a-plus-content-brief.md',pri:'p1',due:'2026-06-28'},
-  {id:'az5',proj:'amazon',text:'📸 A+ Module 4: Gift Pouch 300×400px',desc:'צלם עם iPhone. רקע לבן. Module 4 = gift packaging selling point.',pri:'p1',due:'2026-06-28'},
-  {id:'az6',proj:'amazon',text:'🏪 Build Brand Store',desc:'SC → Stores → Manage Stores. מבנה: Home + 4 symbol pages + Gift Sets.',pri:'p2',due:'2026-06-30'},
-  {id:'az7',proj:'amazon',text:'📣 Launch PPC campaigns',desc:'Phase 1: Auto campaign per hero ASIN. Budget: $5–10/day.',pri:'p2',due:'2026-06-30'},
-  {id:'az8',proj:'amazon',text:'📤 Backend search terms → SC',desc:'~/Desktop/Codex/flat-files/2026-06-27-backend-search-terms.txt\naloha, beach, ocean, lei, luau, aumakua, surf, tribal...',pri:'p2',due:null},
-  {id:'az9',proj:'amazon',text:'🎟️ Prime Day — קופונים + Lightning Deal',desc:'קופונים: 15% FishHook, 12% Plumeria/Honu, 10% Bangle\nLightning Deal: B01MTJNYHE (20%)\nHגשה: July 1',pri:'p2',due:'2026-07-01'},
-  {id:'az10',proj:'amazon',text:'🔘 Request a Review — 5 ASINs',desc:'אחרי העלאת Hero V2. SC → Orders → Manage Orders → Request a Review.',pri:'p2',due:null},
-  {id:'az11',proj:'amazon',text:'🇨🇦 בדיקות מתכות Canada (SGS/BV/Intertek)',desc:'4 ASINs מושבתים בקנדה. CAD $800–1,800. 5–10 ימי עסקים.',pri:'p2',due:null},
-  {id:'az12',proj:'amazon',text:'🛒 בדוק חנות Walmart — האם נפתחה בטעות?',desc:'3 מיילים על הסרת פריטים. כנס ל-Walmart Seller Center.',pri:'p3',due:'2026-06-29'},
-  // Investments
-  {id:'inv1',proj:'invest',text:'🏦 STEP 3: בדוק תגובת Discount להעברת TSLA',desc:'פניה 199930559. DTC 158 / Apex Clearing / 2QI05131. אם אין תגובה — התקשר 03-5151111.',pri:'p1',due:'2026-06-30'},
-  {id:'inv2',proj:'invest',text:'💹 STEP 7: פרוס הון חדש',desc:'שבת: TASE. ראשון: ETN (אם ≤$390) + SPCX add + GEV reserve.',pri:'p2',due:'2026-07-01'},
-  {id:'inv3',proj:'invest',text:'❓ החלט מה לעשות עם TSLA',desc:'להחזיק כתזה EV/AI? למכור ולפנות ל-ETN? החלט לפני 30/6.',pri:'p1',due:'2026-06-30'},
-  {id:'inv4',proj:'invest',text:'📞 וודא שברי מניות (fractional) במיטב',desc:'מיטב טרייד: 03-7903555. שאל: האם ניתן לקנות שבר ב-VRT/ETN?',pri:'p1',due:'2026-06-30'},
-  {id:'inv5',proj:'invest',text:'✅ STEP 5: אשר TSLA במיטב',desc:'customers.meitav.co.il → הרכב נכסים. 2 מניות TSLA תחת מניה זרה.',pri:'p2',due:'2026-06-29'},
-  // Hugs & Trees
-  {id:'ht1',proj:'trees',text:'🌐 Set up hugsandtrees.com',desc:'Domain at Namecheap (Order #205788367). Landing page or coming-soon.',pri:'p1',due:null},
-  {id:'ht2',proj:'trees',text:'💳 Update Namecheap credit card',desc:'כרטיס פג תוקף — עדכן לפני שה-domain ייפוג.',pri:'p1',due:null},
-  {id:'ht3',proj:'trees',text:'✏️ Sketch ring installation design',desc:'Ring that fits around tree trunk. Material, sizing, attachment.',pri:'p1',due:null},
-  {id:'ht4',proj:'trees',text:'📦 Design connected box unit',desc:'Soil, water reservoir, roots. Dimensions and materials.',pri:'p1',due:null},
-  {id:'ht5',proj:'trees',text:'🌿 Identify covannazil plant',desc:'Hebrew name, botanical name, where to source. Is it edible? Does it climb?',pri:'p1',due:null},
-  {id:'ht6',proj:'trees',text:'🌱 Research growing conditions',desc:'Soil, water, sunlight, temperature. Trellis or self-climb?',pri:'p1',due:null},
-  {id:'ht7',proj:'trees',text:'🎨 Define brand identity',desc:'Hugs and Trees. Logo, colors, tone of voice.',pri:'p2',due:null},
-  {id:'ht8',proj:'trees',text:'📏 Define target tree types and trunk sizes',desc:'Species and diameter ranges → determines ring sizing.',pri:'p2',due:null},
-  // Personal
-  {id:'per1',proj:'personal',text:'🚨 MSK MyChart — בדוק התראת אבטחה',desc:'מכשיר נייד חדש חובר לחשבון. אם לא אתה — 646-227-2593.',pri:'p1',due:'2026-06-27'},
-  {id:'per2',proj:'personal',text:'💳 שלם חשבון אבן יהודה',desc:'שובר דיגיטלי מ-mast@outbox.co.il. OVERDUE.',pri:'p1',due:'2026-06-26',overdue:true},
-  {id:'per3',proj:'personal',text:'📋 פגישה עם דור אליאב — The Switch',desc:'שני בוקר, 29/6.',pri:'p2',due:'2026-06-29'},
-  {id:'per4',proj:'personal',text:'📨 Ayalon — חידוש פוליסת בריאות',desc:'בדוק הודעת חידוש מ-moked-briut@ayalon-ins.co.il.',pri:'p2',due:'2026-06-26',overdue:true},
-  {id:'per5',proj:'personal',text:'💳 AT&T — $124.36',desc:'חשבון חודשי. Due July 8. myAT&T.',pri:'p2',due:'2026-07-08'},
-  {id:'per6',proj:'personal',text:'🔐 OpenAI גישה לחשבון Google',desc:'בדוק myaccount.google.com → Security → Third-party apps.',pri:'p2',due:'2026-06-21',overdue:true},
-  {id:'per7',proj:'personal',text:'📄 מכתב סיום עבודה אגם לידרים (Fiverr)',desc:'מ-orli.yakobov@agamin.co.il. בדוק אם נדרשת פעולה.',pri:'p2',due:'2026-06-24',overdue:true},
-];
-
-const PROJECTS = {
-  nlp:     {name:'NLP — הדס וילף',       color:'#9b59b6'},
-  amazon:  {name:'Austaras — Amazon FBA', color:'#e67e22'},
-  invest:  {name:'השקעות — Meitav',       color:'#27ae60'},
-  trees:   {name:'Hugs and Trees 🌳',     color:'#16a085'},
-  personal:{name:'אישי / כללי',          color:'#2980b9'},
-};
-
-// ====== RENDER TASKS — read-only ======
-function renderTasks() {
-  const container = document.getElementById('tasks-container');
-
-  const grouped = {};
-  TASKS.forEach(t => {
-    if (!grouped[t.proj]) grouped[t.proj] = [];
-    grouped[t.proj].push(t);
-  });
-
-  const projOrder = ['nlp','amazon','invest','trees','personal'];
-  let html = '';
-
-  projOrder.forEach(projKey => {
-    const tasks = grouped[projKey] || [];
-    if (!tasks.length) return;
-    const proj = PROJECTS[projKey];
-    const p1Count = tasks.filter(t => t.pri === 'p1').length;
-
-    html += `<div class="proj-group open" id="pg-${projKey}">
-      <div class="proj-header" onclick="toggleProj('${projKey}')">
-        <div class="proj-dot" style="background:${proj.color}"></div>
-        <div class="proj-name">${proj.name}</div>
-        ${p1Count > 0 ? `<span class="sbadge s-above" style="font-size:10px">${p1Count} P1</span>` : ''}
-        <div class="proj-count">${tasks.length}</div>
-        <div class="proj-chevron">›</div>
-      </div>
-      <div class="proj-tasks">`;
-
-    tasks.forEach(t => {
-      const overdue = t.overdue;
-      html += `<div class="task-item">
-        <div class="task-dot" style="background:${proj.color};opacity:.7"></div>
-        <div class="task-body">
-          <div class="task-text">${t.text}</div>
-          ${t.desc ? `<div class="task-desc">${t.desc}</div>` : ''}
-          <div class="task-meta">
-            <span class="task-tag ${t.pri}">${t.pri.toUpperCase()}</span>
-            ${t.due ? `<span class="task-tag ${overdue?'overdue':''}">${overdue?'⚠️ OVERDUE · ':''}${t.due}</span>` : ''}
-          </div>
-        </div>
-      </div>`;
-    });
-
-    html += `</div></div>`;
-  });
-
-  container.innerHTML = html;
-}
-
-function toggleProj(key) {
-  const el = document.getElementById('pg-'+key);
-  el.classList.toggle('open');
-}
-
-// ====== APPROVALS — read-only display ======
-function renderApprovals() {
-  try {
-    const data = JSON.parse(document.getElementById('radar-data').textContent);
-    const aps = data.approvals || [];
-    document.getElementById('ap-count').textContent = aps.length;
-
-    const container = document.getElementById('approvals-container');
-    if (!aps.length) {
-      container.innerHTML = '<div class="empty">אין פריטים פתוחים</div>';
-      return;
-    }
-
-    container.innerHTML = aps.map(a => {
-      const optionsHtml = a.options
-        ? `<div class="ap-options">${a.options.map(opt =>
-            `<div class="ap-option ${opt.color||''}">
-              <div class="ap-option-icon">${opt.icon}</div>
-              <div class="ap-option-body">
-                <div class="ap-option-label">${opt.label}</div>
-                <div class="ap-option-note">${opt.note}</div>
-              </div>
-            </div>`
-          ).join('')}</div>`
-        : '';
-
-      return `<div class="ap-item">
-        <div class="ap-header">
-          <div class="ap-title">${a.title}</div>
-          <div class="ap-tag">${a.category}</div>
-        </div>
-        <div class="ap-desc">${a.description}</div>
-        ${optionsHtml}
-        <div class="ap-note">📋 פריט זה מוצג לעיון — ביצוע ידני נדרש</div>
-      </div>`;
-    }).join('');
-  } catch(e) { console.error(e); }
-}
-
-// ====== CHARTS ======
-function initCharts() {
-  // Sector pie
-  const sectorData = {
-    labels:['AI → חשמל (OPC+Doral+Enlight)','שוק הון ישראלי (IBI)','חלל (SPCX)','ביוטק (MRNA)','צריכה (Max)','תוכנה (Elad)','מזומן'],
-    values:[2671,1960,560,361,376,225,10655],
-    colors:['#e67e22','#2980b9','#8e44ad','#e74c3c','#f39c12','#16a085','#7f8c8d']
-  };
-  const mktData = {
-    labels:['תל אביב (TASE)','ארה״ב (NASDAQ/NYSE)','מזומן'],
-    values:[4746+1960+376+225+512+486,560+361,10655],
-    colors:['#3498db','#2ecc71','#95a5a6']
-  };
-
-  function makePie(canvasId, legendId, data) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
-    new Chart(ctx, {
-      type:'doughnut',
-      data:{labels:data.labels, datasets:[{data:data.values, backgroundColor:data.colors, borderWidth:1, borderColor:'#0d0d12'}]},
-      options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:function(c){const total=c.dataset.data.reduce((a,b)=>a+b,0);return c.label+': '+(c.raw/total*100).toFixed(1)+'%';}}}}},
-    });
-    document.getElementById(legendId).innerHTML = data.labels.map((l,i)=>
-      `<div class="legend-item"><div class="legend-dot" style="background:${data.colors[i]}"></div>${l}</div>`
-    ).join('');
-  }
-
-  makePie('sectorChart','sectorLegend',sectorData);
-  makePie('marketChart','marketLegend',mktData);
-}
-
-// ====== NAV ======
-function nav(sectionId, tabIdx) {
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.bnav-item').forEach(t=>t.classList.remove('active'));
-  document.getElementById(sectionId).classList.add('active');
-  document.querySelectorAll('.tab')[tabIdx].classList.add('active');
-  document.querySelectorAll('.bnav-item')[tabIdx].classList.add('active');
-
-  if (sectionId === 'invest') setTimeout(initCharts, 50);
-}
-
-// ====== INIT ======
-const now = new Date();
-const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-document.getElementById('dateDisplay').textContent = `${days[now.getDay()]}, ${now.toLocaleDateString('he-IL')}`;
-
-try {
-  const data = JSON.parse(document.getElementById('radar-data').textContent);
-  if (data.updated) {
-    const d = new Date(data.updated);
-    document.getElementById('updatedDisplay').textContent = 'עדכון אחרון: '+d.toLocaleString('he-IL');
-    if (data.summary) document.getElementById('summary-text').textContent = data.summary;
-  }
-} catch(e) {}
-
-renderTasks();
-renderApprovals();
-</script>
-</body>
-</html>
+        {"icon":"❌","label":"מכור הכל — לs^@�^{^�^C^g^t�^s^�^g^������є��^�^�^P�^C^��^S^S^W^|�^s^�^g^��^P�$�A�ݕȃ^S^�^g^g^t�������Ȉ艽�еɕ���(������t(�����(��t)�(�͍ɥ���((�͍ɥ���(���������
+=9%�������)����ЁQ=-9}-d��ѽ�����}���}ѽ�����)����ЁA$�􀝡����輽����ѽ����й����ɕ�н�Ȝ�)����ЁQ=d�􁹕܁�є���ѽ%M=M�ɥ���������Р�P��l�t�((���5���Q�����Ё�ɽ���Ё����̃�H���͡���ɐ��ɽ���)����ЁAI=)}5@��l(��쁭����l����������ɼ�t��������������������������ɽ��蝹���������������91@��P�^S^O^��^W^g^s^����������������蜌���؜���(��쁭����l����хɅ̜�����齸�������t���������������ɽ��蝅��齸������������хɅ̃�P���齸�	���������蜍��ݔ�Ȝ���(��쁭����l�^S^�^�^�^W^������ٕ�М�����х؜���ѽ��̝t�����ɽ��蝥�ٕ�М���������^S^�^�^�^W^���P�5��х؜��������������蜌�݅�������(��쁭����l��՝̜���ɕ�̜��^�^�^g^t�t�������������������ɽ����ɕ�̜����������!՝́����Qɕ�̃�~2̜������������蜌�ل��Ԝ���(��쁭����l����ͽ������^C^g^�^d���^o^s^s^d�������Ʌ��t������ɽ������ͽ�����������^C^g^�^d���^o^s^s^d�������������������蜌�����䜁��)t�)����ЁAI=)}=IH��l����������齸�����ٕ�М���ɕ�̜�����ͽ����t�()�չ�ѥ������Aɽ���С�ɽ�9������(��������ɽ�9�����ɕ��ɸ�쁝ɽ������ͽ�����������^C^g^�^d���^o^s^s^d��������蜌�����䜁��(������Ё��ݕȀ��ɽ�9����ѽ1�ݕ�
+�͔���(����Ȁ�����Ё�����AI=)}5@���(�������������̹ͽ����������ݕȹ����Ց�̡�����ɕ��ɸ���(���(�����U����ݸ��ɽ���Ѓ�P��͔���́�������ɕ�ѱ�(��ɕ��ɸ�쁝ɽ��耝�ɽ�|�����ɽ�9����ɕ�������q̬����|����������ɽ�9����������蜌�����䜁��)�()�չ�ѥ������Aɥ�ɥ������(�����Q����������ɝ��С�Ĥ����������Ȥ��������մ��̤����������Ф(��ɕ��ɸ�l��М���̜���Ȝ���ĝum�����t������М�)�((���������A$�������)��幌��չ�ѥ�������С��Ѡ���(������Ёѽ����􁱽���MѽɅ������%ѕ��Q=-9}-d��(������ЁȀ�݅�Ё��э��A$�����Ѡ���(������������쀝�ѡ�ɥ�ѥ���耝	��ɕȀ����ѽ�����(�����(�������ȹ����쁍���Ё��􁹕܁�ɽȠ�A$�����ȹ�х��̤쁔��х��̀�ȹ�х����ѡɽ܁���(��ɕ��ɸ�ȹ�ͽ����)�()��幌��չ�ѥ������A��С��Ѡ���(������Ёѽ����􁱽���MѽɅ������%ѕ��Q=-9}-d��(������ЁȀ�݅�Ё��э��A$�����Ѡ���(������ѡ��耝A=MP��(������������쀝�ѡ�ɥ�ѥ���耝	��ɕȀ����ѽ�����(�����(�������ȹ����쁍���Ё��􁹕܁�ɽȠ�A$�����ȹ�х��̤쁔��х��̀�ȹ�х����ѡɽ܁���(��ɕ��ɸ���Ք�)�((���������MQU@�������)�չ�ѥ���͡��M��������(�����յ��й���������	�%���͕���M�ɕ�������屔��������􀝙�����)�()��幌��չ�ѥ���ٕͅQ��������(������Ёѽ����􁑽�յ��й���������	�%���ѽ���%���М��م�Ք��ɥ����(�������ѽ�����ɕ��ɸ�(�������MѽɅ���͕�%ѕ��Q=-9}-d��ѽ�����(������(�����݅�Ё����Р���ɽ����̜��(�������յ��й���������	�%���͕���M�ɕ�������屔��������􀝹�����(���������͡���ɐ���(��􁍅э������(���������MѽɅ���ɕ��ٕ%ѕ��Q=-9}-d��(�������յ��й���������	�%���͕����ɽȜ����屔��������􀝉������(���)�()�չ�ѥ��������Q��������(�����������ɴ��^s^�^�^��^C^��Q�����Ѓ^W^s^_^[^W^��^s^{^�^h�^S^S^�^_^G^�^W^�������(���������MѽɅ���ɕ��ٕ%ѕ��Q=-9}-d��(��������ѥ���ɕ�������(���)�((���������1=�������)��幌��չ�ѥ��������͡���ɐ����(������Ёѽ����􁱽���MѽɅ������%ѕ��Q=-9}-d��(�������ѽ������͡��M�������ɕ��ɸ��((������Ё�Ѹ�􁑽�յ��й���������	�%����幍	Ѹ���(���Ѹ���ͅ��������Ք쁉Ѹ�ѕ��
+��ѕ�Ѐ􀟊츸���(�����յ��й���������	�%�������ѕ������䜤�ѕ��
+��ѕ�Ѐ�^{^�^�^o^�^|�^�^t�Q�����и����((������(��������Ёmх̰ͭ��ɽ�����t��݅�ЁAɽ��͔�����l(����������Р��х̜ͭ��(����������Р���ɽ����̜�(����t��((��������Ё�ɽ�	�%������(�����ɽ����̹��������������ɽ�	�%�m����t������������((����ɕ����Q�̡ͭх̰ͭ��ɽ�	�%���(����ɕ����	��ѱ������х̰ͭ��ɽ�	�%���((��������ЁЀ􁱽���MѽɅ������%ѕ��Q=-9}-d��(�������յ��й���������	�%���ѽ���Mх��̜��ѕ��
+��ѕ�Ѐ�(�����������������������йͱ�����Ф�����
+܃^{^_^W^G^���((�������յ��й���������	�%�������ѕ������䜤�ѕ��
+��ѕ�Ѐ�(�������^�^W^�^o^�^|耜�����܁�є���ѽ1�����Q���M�ɥ�������%0���쁡����ȵ����М������є�ȵ����М����(��􁍅э������(�����������х��̀�����ā������х��̀�����̤��(�����������MѽɅ���ɕ��ٕ%ѕ��Q=-9}-d��͡��M�������(����􁕱͔��(���������յ��й���������	�%�������ѕ������䜤�ѕ��
+��ѕ�Ѐ􀟊j���<�^�^K^g^C^P耜��������ͅ���(�����(��􁙥������(�����Ѹ���ͅ�����􁙅�͔쁉Ѹ�ѕ��
+��ѕ�Ѐ􀟊�^�^�^�^|��(���)�()�չ�ѥ����幍9�ܠ��쁱����͡���ɐ����((���������I9H�QM-L�������)�չ�ѥ���ɕ����Q�̡ͭх̰ͭ��ɽ�	�%����(������Ё���х���Ȁ􁑽�յ��й���������	�%���х̵ͭ���х���Ȝ��(������Ё�ɽ��̀����((��х̹ͭ�������Ѐ����(��������Ё�������􁵅�Aɽ���С�ɽ�	�%�mй�ɽ����}��t��������(��������Ё���􁵅������ɽ���(����������ɽ���m���t���ɽ���m���t��쁵�ф聵�������хͭ��mt���(�����ɽ���m���t�х̹ͭ��͠�Ф�(�����((������Ё���̀�=����й���̡�ɽ��̤�ͽ�Р�����������(��������Ё����AI=)}=IH������=����������AI=)}=IH������=�����(��������������������������ɕ��ɸ���������
+����ɔ����(����������������ɕ��ɸ��쁥�����������ɕ��ɸ����(����ɕ��ɸ���������(�����((����������̹����Ѡ���(�������х���ȹ�����!Q50���؁�����􉕵����^C^g^|�^{^�^g^{^W^��^�^�^W^_^W^���~:$𽑥����(����ɕ��ɸ�(���((����Ё�ѵ��􀜜�(�����̹��������������(��������Ё쁵�ф��хͭ�聝Ё��ɽ���m���t�(�����йͽ�Р�����������(�������������ɥ�ɥ�䀄�􁈹�ɥ�ɥ�䤁ɕ��ɸ����ɥ�ɥ�䀴����ɥ�ɥ���(����������Ё���􁄹�Ք������Ք���є�耜���䜰����􁈹�Ք������Ք���є�耜�����(������ɕ��ɸ����������
+����ɔ�����(�������(��������Ё�Ō��й���ѕȡЀ���й�ɥ�ɥ�����Ф�����Ѡ�(�����ѵ�����؁�������ɽ���ɽ����������������������(�������؁�������ɽ�������Ȉ���������ѽ����Aɽ�������������(���������؁�������ɽ����Ј���屔􉉅���ɽչ�����ф��������𽑥��(���������؁�������ɽ����������͌���ф�������𽑥��(�����������Ō����������������͉�����̵���ٔ����屔􉙽�еͥ�����������ō�@���������耜��(���������؁�������ɽ����չЈ���й����ѡ�𽑥��(���������؁�������ɽ������ɽ�����𽑥��(������𽑥��(�������؁�������ɽ��хͭ̈���((�����й�������Ѐ����(����������Ё�ɤ�􁵅�Aɥ�ɥ��й�ɥ�ɥ���(����������Ё�Ք��й�Ք���й�Ք���є�聹ձ��(����������Ё����Ք�����Ք���Q=d�(�������ѵ�����؁������хͬ��ѕ������Ѥ���й����(�����������ѽ��������хͬ���������������􉍽����ѕQ�ͬ����й�����ѡ�̤��ѥѱ��^�^{^|�^o^S^W^�^s^t�����ѽ��(���������؁������хͬ������(�����������؁������хͬ�ѕ�Ј���͌�й���ѕ�Х�𽑥��(������������й��͍ɥ�ѥ�������؁������хͬ���͌����͌�й��͍ɥ�ѥ����𽑥����耜��(�����������؁������хͬ���ф��(������������������������хͬ�х�����ɥ�����ɤ�ѽU����
+�͔���������(��������������Ք����������������хͬ�х�����������ٕɑՔ��耝х���Ք������������j���<�=YIU�
+܀��耜����Օ���������耜��(����������𽑥��(��������𽑥��(������𽑥����(�������((�����ѵ����𽑥��𽑥����(�����(�����х���ȹ�����!Q50��ѵ��)�((���������I9H�	=QQ19
+,�������)�չ�ѥ���ɕ����	��ѱ������х̰ͭ��ɽ�	�%����(������Ё�Ā�хͭ�(��������ѕȡЀ���й�ɥ�ɥ�����Ф(�����ͽ�Р�����������(����������Ё���􁄹�Ք������Ք���є�耜���䜰����􁈹�Ք������Ք���є�耜�����(������ɕ��ɸ����������
+����ɔ�����(�������ͱ���������((������Ё��􁑽�յ��й���������	�%������ѱ���������х���Ȝ��(��������Ĺ����Ѡ��쁌������!Q50���؁�����􉍅ɐ���؁�����􉕵����^C^g^|�@ă^�^�^W^_^g^t��~:$𽑥��𽑥����ɕ��ɸ��((����Ё�ѵ����؁�����􉍅ɐ���؁�����􉍅ɐ�ѥѱ����~j��@ă�P�^O^_^W^��^G^g^W^�^�𽑥����(���Ĺ�������Ѐ����(��������Ё�ɽ����ɽ�	�%�mй�ɽ����}��t�������(��������Ё�Ք��й�Ք���й�Ք���є�聹ձ��(��������Ё����Ք�����Ք���Q=d�(�����ѵ�����؁�����􉉸��ѕ���(�������؁�����􉉸��������j�𽑥��(�������؁�����􉉸������(���������؁�����􉉸�ѥѱ�����͌�й���ѕ�Х�𽑥��(���������؁�����􉉸���͌����͌��ɽ�����Ք�����
+܀������������j���<�=YIU�
+܀��耜������Ք�耜��𽑥��(������𽑥��(����𽑥����(�����(���ѵ����𽑥����(���������!Q50��ѵ��)�((���������
+=5A1Q�QM,�������)��幌��չ�ѥ���������ѕQ�ͬ������Ѹ���(���Ѹ������1��й�����������ѥ�����(���Ѹ�ѕ��
+��ѕ�Ѐ􀟊rL��(���Ѹ���ͅ��������Ք�(������(�����݅�Ё���A��Р��х̼ͭ��������������͔���(��������Ё���􁑽�յ��й���������	�%���Ѥ���������(�������������(�����������屔��Ʌ�ͥѥ���􀝽�����䀸��̰������Ѐ��̀��̰�����������̀��̜�(�����������屔��ٕə��܀􀝡�������(�����������屔������������(����������Ё��􁕰����͕�!������(�����������屔������Ѐ􁠀�������(������͕�Q�����Р������쁕����屔������Ѐ���쁕����屔��������������������(������͕�Q�����Р���������ɕ��ٔ���������(�����(��􁍅э������(�����Ѹ������1��йɕ��ٔ��������ѥ�����(�����Ѹ�ѕ��
+��ѕ�Ѐ􀜜�(�����Ѹ���ͅ�����􁙅�͔�(��������Р�^�^K^g^C^P�^G^�^K^g^�^��^S^{^�^g^{^P耜��������ͅ����(���)�()�չ�ѥ���ѽ����Aɽ�����쁑��յ��й���������	�%�����������������1��йѽ��������������((���������AAI=Y1L�������)�չ�ѥ���ɕ������ɽم�̠���(������(��������Ё��ф��)M=8����͔����յ��й���������	�%���Ʌ��ȵ��ф���ѕ��
+��ѕ�Ф�(��������Ё��̀􁑅ф����ɽم�́���mt�(�������յ��й���������	�%��������չМ��ѕ��
+��ѕ�Ѐ��̹����Ѡ�(��������Ё��􁑽�յ��й���������	�%������ɽم�̵���х���Ȝ��(�����������̹����Ѡ��쁌������!Q50���؁�����􉕵����^C^g^|�^�^�^g^c^g^t�^�^�^W^_^g^t𽑥����ɕ��ɸ��(�����������!Q50���̹����������(����������Ё���̀􁄹��ѥ��̀����؁����������ѥ��̈��턹��ѥ��̹��������(����������؁����������ѥ����������������(�����������؁����������ѥ������������������𽑥��(�����������؁����������ѥ���������؁����������ѥ������������͌����������𽑥���؁����������ѥ�����є����͌�����є��𽑥��𽑥��(��������𽑥��������������𽑥����耜��(������ɕ��ɸ���؁���������ѕ���(���������؁�������������Ȉ��؁��������ѥѱ�����͌���ѥѱ���𽑥���؁��������х�����͌�����ѕ�����𽑥��𽑥��(���������؁����������͌����͌�����͍ɥ�ѥ����𽑥��(���������������(���������؁����������є���~N,�^�^�^g^`�^[^P�^{^W^�^H�^s^�^g^W^|��P�^G^g^�^W^��^g^O^�^d�^�^O^�^�𽑥��(������𽑥����(����������������(��􁍅э�������)�((���������%9YMP�������)�չ�ѥ���ɕ����%�ٕ�Р���(������(��������Ё���)M=8����͔����յ��й���������	�%���Ʌ��ȵ��ф���ѕ��
+��ѕ�Ф�(�����������յ���䤁���յ��й���������	�%����յ����ѕ�М��ѕ��
+��ѕ�Ѐ􁐹�յ�����(��������Ёʹ��텉�ٔ�̵���ٔ��݅���̵݅�М�������̵�����������̵�����(�����������ᕍ�ѕQ���䤁�(���������յ��й���������	�%����ᕌ��ɥ���������!Q50�􁐹�ᕍ�ѕQ���乵�������(����������؁������ᕌ��ѕ���(�����������؁������ᕌ�ѥ���Ȉ��픹ѥ�����𽑥��(�����������؁������ᕌ��������픹�����𽑥��(�����������؁������ᕌ��ɥ�������픹�ɥ���𽑥��(�����������؁������ᕌ�хɝ�Ј�^g^�^L耑픹хɝ���𽑥��(����������������������͉�������͵m���х���u��̵���������픹��ѕ�������(��������𽑥��������������(�����(��􁍅э�������)�()��Ё������	ե�Ѐ􁙅�͔�)�չ�ѥ�������
+����̠���(������������	ե�Ф�ɕ��ɸ쁍�����	ե�Ѐ���Ք�(������Ё̀��(�����������l�$��H�^_^�^{^p���^�^W^��^S^W^|�^g^�^�^C^s^d���^_^s^p���^G^g^W^c^����^�^�^g^o^P���^�^W^o^�^P���^{^[^W^{^|�t�(����م�Օ��l���İ�����������İ��ذ��԰�����t�(�����������l����ݔ�Ȝ��������䜰����х�������ь͌��������Ȝ����ل��Ԝ���ݘ�ᐝt(����(������Ё����(�����������l�^�^p�^C^G^g^D���^C^�^S^�^D���^{^[^W^{^|�t�(����م�Օ��l������İ�����t�(�����������l�����ᑈ����ɕ���Ĝ����ՄՄ؝t(����(��ml�͕�ѽ�
+���М��͕�ѽ�1��������t�l���ɭ��
+���М����ɭ��1��������ut���������m���������t������(������܁
+���С���յ��й���������	�%����������
+��ѕ�Р�ɐ�����(����������蝑�՝���М�(��������ф��������鐹�����̱��х͕���m푅ф鐹م�Օ̱�����ɽչ�
+����鐹�����̱��ɑ��]��Ѡ�ı��ɑ��
+����蜌�����ȝ�u��(��������ѥ�����ɕ����ͥٔ���Ք�����х�������I�ѥ�际�͔���՝������������푥�����际�͕��ѽ��ѥ��퍅�����������������퍽��Ё������х͕й��ф�ɕ�Ս����������������ɕ��ɸ����������耜����ɅܽШ�����ѽ�ᕐ�Ĥ�����������(�������(�������յ��й���������	�%������������!Q50�􁐹�����̹�����������(��������؁�����􉱕������ѕ����؁�����􉱕�������Ј���屔􉉅���ɽչ��퐹������m�u��𽑥������𽑥��������������(�����)�((���������9X�������)�չ�ѥ�����ء������ँ�(�����յ��й�Օ��M����ѽ������͕�ѥ���������������̹�����1��йɕ��ٔ����ѥٔ����(�����յ��й�Օ��M����ѽ������х������ص�ѕ��������������й�����1��йɕ��ٔ����ѥٔ����(�����յ��й���������	�%�����������1��й�������ѥٔ���(�����յ��й�Օ��M����ѽ������х���m���t������1��й�������ѥٔ���(�����յ��й�Օ��M����ѽ���������ص�ѕ���m���t������1��й�������ѥٔ���(�����������􀝥�ٕ�М��͕�Q�����С����
+����̰�����)�((���������UQ%1L�������)�չ�ѥ����͌�̤��(�������̤�ɕ��ɸ����(��ɕ��ɸ�M�ɥ���̤�ɕ����������������윤�ɕ�������𽜰����윤�ɕ���������������윤�ɕ��������������ս�윤�)�((���������%9%P�������)����Ё}��܀􁹕܁�є���)����Ё}���̀�l�^�^C^�^W^|���^�^�^d���^�^s^g^�^d���^�^G^g^�^d���^_^{^g^�^d���^�^g^�^d���^�^G^��t�)���յ��й���������	�%�����ѕ�����䜤�ѕ��
+��ѕ�Ѐ�(��}����m}��ܹ����䠥t����������}��ܹѽ1������ѕM�ɥ�������%0���()ɕ������ɽم�̠��)ɕ����%�ٕ�Р��)�����͡���ɐ���(�͍ɥ���(𽉽���(�ѵ��
